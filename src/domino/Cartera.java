@@ -1,8 +1,8 @@
 /**
   Archivo: Cartera.java
-  Fecha creación:		Jul 14, 2019
-  Última modificación:	mes d, 2019
-  Versión: 0.1
+  Fecha creaciï¿½n:		Jul 14, 2019
+  ï¿½ltima modificaciï¿½n:	mes d, 2019
+  Versiï¿½n: 0.1
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor        1840558
@@ -16,5 +16,17 @@ package domino;
  * 
  */
 public class Cartera {
+	
+	private int dinero;
+	
+	public void dinero(int dinero) {
+		this.dinero = dinero;
+		
+	}
+	
+	
+	public int getDinero() {
+		return dinero;
+	}
 
 }

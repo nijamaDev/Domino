@@ -16,5 +16,11 @@ package domino;
  * 
  */
 public class Fichas {
-
+	private int num, som;
+	private String hola;
+	
+	public Fichas() {
+	num = 5;
+	
+	}
 }

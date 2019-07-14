@@ -1,8 +1,8 @@
 /**
   Archivo: Fichas.java
-  Fecha creaciï¿½n:		Jul 14, 2019
-  ï¿½ltima modificaciï¿½n:	mes d, 2019
-  Versiï¿½n: 0.1
+  Fecha creación:		Jul 14, 2019
+  Última modificación:	mes d, 2019
+  Versión: 0.1
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor        1840558
@@ -12,12 +12,19 @@
 */
 package domino;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 /**
  * 
  */
-public class Ficha {
+public class Ficha extends JLabel {
+	private ImageIcon image;
+	private int idImage;
 	
-	public Ficha() {
+	public Ficha(ImageIcon image, int idImage) {
+		this.image = image;
+		this.idImage = idImage;
 	
 	}
 }

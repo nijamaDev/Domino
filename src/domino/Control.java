@@ -1,5 +1,5 @@
 /**
-  Archivo: Fichas.java
+  Archivo: Control.java
   Fecha creación:		Jul 14, 2019
   Última modificación:	mes d, 2019
   Versión: 0.1
@@ -15,9 +15,6 @@ package domino;
 /**
  * 
  */
-public class Fichas {
-	
-	public Fichas() {
-	
-	}
+public class Control {
+
 }

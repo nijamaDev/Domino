@@ -1,5 +1,5 @@
 /**
-  Archivo: Main.java
+  Archivo: Jugador.java
   Fecha creación:		Jul 14, 2019
   Última modificación:	mes d, 2019
   Versión: 0.1
@@ -10,18 +10,11 @@
   Email:	nicolas.jaramillo@correounivalle.edu.co
 
 */
+package domino;
 
 /**
  * 
  */
-public class Main {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
+public class Jugador {
 
 }

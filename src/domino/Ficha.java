@@ -1,5 +1,5 @@
 /**
-  Archivo: Pila.java
+  Archivo: Fichas.java
   Fecha creación:		Jul 14, 2019
   Última modificación:	mes d, 2019
   Versión: 0.1
@@ -15,6 +15,9 @@ package domino;
 /**
  * 
  */
-public class Pila {
-
+public class Ficha {
+	
+	public Ficha() {
+	
+	}
 }

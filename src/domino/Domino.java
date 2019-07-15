@@ -41,12 +41,8 @@ import misComponentes.Titulos;
  * 
  */
 public class Domino extends JFrame {
-	private ImageIcon fichaIcon = null;
-	private String imageRoute = "src/imagenes/";
-	private ArrayList<Ficha> pila = new ArrayList<Ficha>(28);
 	private Escuchas escucha;
 	private JButton nuevo, salir;
-	private Ficha ficha;
 	private JPanel tituloPanel, // North
 				   zonaJuego,	// Center
 				   oponentPanel,// Center > North
@@ -54,33 +50,14 @@ public class Domino extends JFrame {
 				   jugadorPanel;// South
 	
 	public Domino() {
-		try {
-			//pila.ensureCapacity(28);
-			for (int i=0; i<7; i++) {
-				for (int j = i; j<7; j++) {
-					//System.out.println( "i: " + i + ", j: " + j);
-					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute +i+ "-" +j+ ".png")));
-					ficha = new Ficha(fichaIcon, i, j);
-					pila.add(ficha);
-					
-				}
-			}
-			
-			initGUI();
+		initGUI();
 
-			// default window configuration
-			this.setUndecorated(true);
-			pack();
-			this.setResizable(false);
-			this.setLocationRelativeTo(null);
-			this.setVisible(true);
-			
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null, 
-					"No se ha encontrado la imágen en: \"" + imageRoute + "\"");
-		}
+		// default window configuration
+		this.setUndecorated(true);
+		pack();
+		this.setResizable(false);
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 	
 	private void initGUI() {
@@ -171,11 +148,13 @@ public class Domino extends JFrame {
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
 		
+		// Panel del oponente (computador)
 		oponentPanel = new JPanel();
-		oponentPanel.setLayout(new FlowLayout());
+		oponentPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
 		
+		// Panel del tablero
 		tableroPanel = new JPanel();
 		tableroPanel.setLayout(new GridBagLayout());
 		

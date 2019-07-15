@@ -28,8 +28,8 @@ public class Jugador {
 	}
 	
 	
-	public Ficha getFichasJugador(Ficha fichasEnMano) {
-		return fichasEnMano;
+	public ArrayList<Ficha> getFichasJugador() {
+		return fichasDelJugador;
 		
 	}
 	

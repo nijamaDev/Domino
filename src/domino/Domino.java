@@ -152,12 +152,17 @@ public class Domino extends JFrame {
 		*/
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
-		
+		zonaJuego.setBackground(Color.black);
 		// Panel del oponente (computador)
 		oponentPanel = new JPanel();
 		oponentPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+		JButton nue = new JButton("Nue");
+		nue.addActionListener(escucha);
+		nue.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
+		oponentPanel.add(nue);
 		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
+		
 		
 		// Panel del tablero
 		tableroPanel = new JPanel();
@@ -174,17 +179,15 @@ public class Domino extends JFrame {
 		
 		tablero.setLayout(new GridBagLayout());
 		tablero.repaint();
-		tablero.setPreferredSize(new Dimension(1200, 340));
-		JButton nue = new JButton("Nue");
-		nue.addActionListener(escucha);
-		nue.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
+		tablero.setPreferredSize(new Dimension(1150, 400));
+		
 		
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		
-		tablero.add(nue);
+		
 		Titulos tabl = new Titulos("holi ", 30, Color.black);
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 10;
@@ -193,7 +196,7 @@ public class Domino extends JFrame {
 		c.gridheight = 1;
 		tablero.add(tabl);
 		
-		zonaJuego.add(tablero, BorderLayout.CENTER);
+		zonaJuego.add(tablero, BorderLayout.PAGE_END);
 		
 		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
 		

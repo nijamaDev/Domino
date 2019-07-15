@@ -14,6 +14,7 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -44,6 +45,7 @@ public class Domino extends JFrame {
 	private Escuchas escucha;
 	private JButton nuevo, salir;
 	private Ficha ficha;
+	private JPanel zonaJuego;
 	
 	public Domino() {
 		try {
@@ -82,36 +84,61 @@ public class Domino extends JFrame {
 		escucha = new Escuchas();
 		this.getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		this.setBackground(Color.black);
 		
 		// crear la GUI
+		zonaJuego = new JPanel();
 		
+		zonaJuego.setPreferredSize(new Dimension(410,180));
+		zonaJuego.setBackground(Color.black);
 		// Titulo
 		nuevo = new JButton("Nuevo");
+		//nuevo.setBackground(Color.black);
 		nuevo.addActionListener(escucha);
 		c.gridx = 0;
 		c.gridy = 0;
 		//c.weightx = 0.2;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		add(nuevo, c);
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		zonaJuego.add(nuevo, c);
 		
 		Titulos empty1 = new Titulos("      ", 30, Color.black);
 		c.gridx = 1;
-		add(empty1, c);
+		c.gridwidth = 1;
+		zonaJuego.add(empty1, c);
 		
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
-		c.gridx = 2;
+		c.gridx = 3;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 1;
-		add(titulo, c);
+		zonaJuego.add(titulo, c);
 		
 		Titulos empty2 = new Titulos("      ", 30, Color.black);
-		c.gridx = 3;
-		add(empty2, c);
+		c.gridx = 5;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.VERTICAL;
+		zonaJuego.add(empty2, c);
 		
 		salir = new JButton("Salir");
 		salir.addActionListener(escucha);
 		//c.gridwidth = 1;
-		c.gridx = 4;
-		add(salir, c);
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 7;
+		zonaJuego.add(salir, c);
+		
+		Titulos tablero = new Titulos("holi ", 30, Color.black);
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 9;
+		c.gridheight = 6;
+		//c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipadx = 300;
+		zonaJuego.add(tablero, c);
+		
+		//zonaJuego.setBorder(new TitledBorder("Zona Juego"));
+		add(zonaJuego);
 		
 		// Zona de juego - centralPanel
 		

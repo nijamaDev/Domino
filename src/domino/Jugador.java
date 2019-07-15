@@ -1,8 +1,8 @@
 /**
   Archivo: Jugador.java
-  Fecha creación:		Jul 14, 2019
-  Última modificación:	mes d, 2019
-  Versión: 0.1
+  Fecha creaciï¿½n:		Jul 14, 2019
+  ï¿½ltima modificaciï¿½n:	mes d, 2019
+  Versiï¿½n: 0.1
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor        1840558
@@ -12,9 +12,25 @@
 */
 package domino;
 
+import java.util.ArrayList;
+
 /**
  * 
  */
 public class Jugador {
-
+	
+	private ArrayList<Ficha> fichasDelJugador = new ArrayList<Ficha>();
+	
+	
+	public void addFicha(Ficha nuevaFicha) {
+		fichasDelJugador.add(nuevaFicha);
+			
+	}
+	
+	
+	public Ficha getFichasJugador(Ficha fichasEnMano) {
+		return fichasEnMano;
+		
+	}
+	
 }

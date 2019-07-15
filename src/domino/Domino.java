@@ -14,6 +14,8 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -47,7 +49,7 @@ public class Domino extends JFrame {
 			//pila.ensureCapacity(28);
 			for (int i=0; i<7; i++) {
 				for (int j = i; j<7; j++) {
-					System.out.println( "i: " + i + ", j: " + j);
+					//System.out.println( "i: " + i + ", j: " + j);
 					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute +i+ "-" +j+ ".png")));
 					ficha = new Ficha(fichaIcon, i, j);
 					pila.add(ficha);
@@ -77,20 +79,26 @@ public class Domino extends JFrame {
 		
 		// crear el escucha
 		escucha = new Escuchas();
+		this.getContentPane().setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
 		
 		// crear la GUI
 		
 		// Titulo
-		nuevo = new JButton("Salir");
+		nuevo = new JButton("Nuevo");
 		nuevo.addActionListener(escucha);
-		add(nuevo, BorderLayout.NORTH);
+		c.gridx = 0;
+		c.gridy = 0;
+		add(nuevo, c);
 		
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
-		add(titulo, BorderLayout.NORTH);
+		c.gridx = 1;
+		add(titulo, c);
 		
 		salir = new JButton("Salir");
 		salir.addActionListener(escucha);
-		add(salir, BorderLayout.LINE_START);
+		c.gridx = 5;
+		add(salir, c);
 		
 		// Zona de juego - centralPanel
 		

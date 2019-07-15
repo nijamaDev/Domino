@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -89,15 +90,27 @@ public class Domino extends JFrame {
 		nuevo.addActionListener(escucha);
 		c.gridx = 0;
 		c.gridy = 0;
+		//c.weightx = 0.2;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		add(nuevo, c);
 		
-		Titulos titulo = new Titulos("Dominó", 30, Color.black);
+		Titulos empty1 = new Titulos("      ", 30, Color.black);
 		c.gridx = 1;
+		add(empty1, c);
+		
+		Titulos titulo = new Titulos("Dominó", 30, Color.black);
+		c.gridx = 2;
+		//c.gridwidth = 1;
 		add(titulo, c);
+		
+		Titulos empty2 = new Titulos("      ", 30, Color.black);
+		c.gridx = 3;
+		add(empty2, c);
 		
 		salir = new JButton("Salir");
 		salir.addActionListener(escucha);
-		c.gridx = 5;
+		//c.gridwidth = 1;
+		c.gridx = 4;
 		add(salir, c);
 		
 		// Zona de juego - centralPanel

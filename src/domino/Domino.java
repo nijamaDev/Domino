@@ -15,6 +15,7 @@ package domino;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -46,6 +47,8 @@ public class Domino extends JFrame {
 	private Escuchas escucha;
 	private JButton nuevo, salir;
 	private Ficha ficha;
+	private JPanel tituloPanel;
+	private JPanel zonaJuego;
 	
 	public Domino() {
 		try {
@@ -86,7 +89,11 @@ public class Domino extends JFrame {
 		// crear la GUI
 		this.getContentPane().setPreferredSize(new Dimension(1200, 640));
 		//this.getContentPane().setBackground(Color.black);
-		this.getContentPane().setLayout(new GridBagLayout());
+		//this.getContentPane().setLayout(new GridBagLayout());
+		tituloPanel = new JPanel();
+		tituloPanel.setLayout(new GridBagLayout());
+		zonaJuego = new JPanel();
+		zonaJuego.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 		//------------ Panel superior --------------
@@ -94,12 +101,17 @@ public class Domino extends JFrame {
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
 		nuevo.addActionListener(escucha);
+		nuevo.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 10));
+		nuevo.setPreferredSize(new Dimension(62,25));
+		
+		
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 0.01;
 		//c.fill = GridBagConstraints.VERTICAL;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.weightx = 0.2;
-		this.getContentPane().add(nuevo, c);
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		
+		tituloPanel.add(nuevo, c);
 		
 		// Titulo
 		/*
@@ -109,13 +121,14 @@ public class Domino extends JFrame {
 		*/
 		
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
+		
 		c.gridx = 1;
-		c.gridwidth = 21;
+		c.weightx = 1;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
 		//c.gridwidth = 1;
-		this.getContentPane().add(titulo, c);
+		tituloPanel.add(titulo, c);
 		
 		/*
 		Titulos empty2 = new Titulos("      ", 30, Color.black);
@@ -132,28 +145,44 @@ public class Domino extends JFrame {
 		salir.setBackground(Color.red);
 		salir.setPreferredSize(new Dimension(42,25));
 		salir.addActionListener(escucha);
-		//c.gridwidth = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHEAST;
-		c.fill = GridBagConstraints.NONE;
-		c.gridx = 22;
-		this.getContentPane().add(salir, c);
 		
+		//c.gridwidth = 1;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 2;
+		c.weightx = 0.01;
+		
+		tituloPanel.add(salir, c);
+		
+		this.getContentPane().add(tituloPanel, BorderLayout.NORTH);
+		
+		/*
 		Titulos tablero = new Titulos("holi ", 30, Color.black);
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 1;
 		c.gridheight = 6;
+		c.weightx = 0.0;
+		
+		
 		//c.anchor = GridBagConstraints.CENTER;
 		//c.fill = GridBagConstraints.HORIZONTAL;
 		//c.ipadx = 300;
-		this.getContentPane().add(tablero, c);
+		//this.getContentPane().add(tablero, c);
+		
+		Titulos tabl = new Titulos("holi ", 30, Color.black);
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 14;
+		c.gridy = 3;
+		c.gridwidth = 1;
+		c.gridheight = 6;
+		//this.getContentPane().add(tabl, c);
 		
 		//zonaJuego.setBorder(new TitledBorder("Zona Juego"));
 		
 		// Zona de juego - centralPanel
-		
+		*/
 		
 		
 	}

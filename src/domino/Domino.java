@@ -29,27 +29,29 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import componentes.Titulos;
+import misComponentes.Titulos;
 
 /**
  * 
  */
 public class Domino extends JFrame {
 	private ImageIcon fichaIcon = null;
-	private String imageRoute = "src/images/";
+	private String imageRoute = "src/imagenes/";
 	private ArrayList<Ficha> pila;
 	private Escuchas escucha;
+	private JButton nuevo, salir;
 	
 	public Domino() {
 		try {
 			for (int i=0; i<7; i++) {
 				for (int j = 0; j<7; j++) {
-					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute + i + "-" + j + ".png")));
+					System.out.println( "i: " + i + ", j: " + j);
+					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute +i+ "-" +j+ ".png")));
 					pila.add(new Ficha(fichaIcon, i, j));
+					
 				}
 			}
 			
-			/*
 			initGUI();
 
 			// default window configuration
@@ -58,7 +60,7 @@ public class Domino extends JFrame {
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			this.setVisible(true);
-			*/
+			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -76,25 +78,21 @@ public class Domino extends JFrame {
 		// crear la GUI
 		
 		// Titulo
+		nuevo = new JButton("Salir");
+		nuevo.addActionListener(escucha);
+		add(nuevo, BorderLayout.NORTH);
+		
 		Titulos titulo = new Titulos("Puzzle Gen�rico #1", 30, Color.black);
 		add(titulo, BorderLayout.NORTH);
 		
-		// Zona de juego - centralPanel
-		dividirImage();
-		
-		// panel buttons
-		panelBotones = new JPanel();
-		ayuda = new JButton("Ayuda");
-		ayuda.addActionListener(escucha);
-		panelBotones.add(ayuda);
-		revolver = new JButton("Revolver");
-		revolver.addActionListener(escucha);
-		panelBotones.add(revolver);
 		salir = new JButton("Salir");
 		salir.addActionListener(escucha);
-		panelBotones.add(salir);
+		add(salir, BorderLayout.NORTH);
 		
-		add(panelBotones, BorderLayout.SOUTH);
+		// Zona de juego - centralPanel
+		
+		
+		
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{
@@ -106,14 +104,10 @@ public class Domino extends JFrame {
 			if (eventAction.getSource() == salir) {
 				System.exit(0);
 			}
-			else if(eventAction.getSource() == ayuda) {
-				// llamar a la ventana ayuda
-				ventanaAyuda.setVisible(true);
-				miMisma.setEnabled(false);
-			}
+			
 			else {
-				// llamar a la funcion revolver ficha
-				revolverFichas();
+				// llamar a la funcion ???
+				
 			}
 		}
 		
@@ -121,7 +115,7 @@ public class Domino extends JFrame {
 		public void mouseClicked(MouseEvent eventMouse) {
 			//intercambiar fichas
 			Ficha fichaClick = (Ficha)eventMouse.getSource();
-			ClickedFicha(fichaClick);
+			//ClickedFicha(fichaClick);
 		}
 		
 	}

@@ -37,17 +37,20 @@ import misComponentes.Titulos;
 public class Domino extends JFrame {
 	private ImageIcon fichaIcon = null;
 	private String imageRoute = "src/imagenes/";
-	private ArrayList<Ficha> pila;
+	private ArrayList<Ficha> pila = new ArrayList<Ficha>(28);
 	private Escuchas escucha;
 	private JButton nuevo, salir;
+	private Ficha ficha;
 	
 	public Domino() {
 		try {
+			//pila.ensureCapacity(28);
 			for (int i=0; i<7; i++) {
-				for (int j = 0; j<7; j++) {
+				for (int j = i; j<7; j++) {
 					System.out.println( "i: " + i + ", j: " + j);
 					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute +i+ "-" +j+ ".png")));
-					pila.add(new Ficha(fichaIcon, i, j));
+					ficha = new Ficha(fichaIcon, i, j);
+					pila.add(ficha);
 					
 				}
 			}

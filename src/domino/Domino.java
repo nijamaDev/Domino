@@ -47,8 +47,11 @@ public class Domino extends JFrame {
 	private Escuchas escucha;
 	private JButton nuevo, salir;
 	private Ficha ficha;
-	private JPanel tituloPanel;
-	private JPanel zonaJuego;
+	private JPanel tituloPanel, // North
+				   zonaJuego,	// Center
+				   oponentPanel,// Center > North
+				   tableroPanel,// Center > Center
+				   jugadorPanel;// South
 	
 	public Domino() {
 		try {
@@ -89,56 +92,38 @@ public class Domino extends JFrame {
 		// crear la GUI
 		this.getContentPane().setPreferredSize(new Dimension(1200, 640));
 		//this.getContentPane().setBackground(Color.black);
-		//this.getContentPane().setLayout(new GridBagLayout());
-		tituloPanel = new JPanel();
-		tituloPanel.setLayout(new GridBagLayout());
-		zonaJuego = new JPanel();
-		zonaJuego.setLayout(new GridBagLayout());
+		
 		GridBagConstraints c = new GridBagConstraints();
 		
-		//------------ Panel superior --------------
+		//-------------- Panel superior --------------
+		tituloPanel = new JPanel();
+		tituloPanel.setLayout(new GridBagLayout());
+		tituloPanel.setBackground(Color.black);
 		
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
 		nuevo.addActionListener(escucha);
-		nuevo.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 10));
-		nuevo.setPreferredSize(new Dimension(62,25));
-		
+		nuevo.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
 		
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 0.01;
-		//c.fill = GridBagConstraints.VERTICAL;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		
 		tituloPanel.add(nuevo, c);
 		
 		// Titulo
-		/*
-		Titulos empty1 = new Titulos("      ", 30, Color.black);
-		c.gridx = 1;
-		this.getContentPane().add(empty1, c);
-		*/
-		
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
 		
 		c.gridx = 1;
-		c.weightx = 1;
+		c.weightx = 10;
+		c.gridheight = 2;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		//c.gridwidth = 1;
 		tituloPanel.add(titulo, c);
 		
-		/*
-		Titulos empty2 = new Titulos("      ", 30, Color.black);
-		c.gridx = 5;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.NONE;
-		//c.fill = GridBagConstraints.VERTICAL;
-		this.getContentPane().add(empty2, c);
-		*/
-		
+		// Botón salir
 		salir = new JButton("X");
 		salir.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 		salir.setForeground(Color.white);
@@ -146,7 +131,7 @@ public class Domino extends JFrame {
 		salir.setPreferredSize(new Dimension(42,25));
 		salir.addActionListener(escucha);
 		
-		//c.gridwidth = 1;
+		c.gridheight = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 2;
@@ -154,7 +139,7 @@ public class Domino extends JFrame {
 		
 		tituloPanel.add(salir, c);
 		
-		this.getContentPane().add(tituloPanel, BorderLayout.NORTH);
+		this.getContentPane().add(tituloPanel, BorderLayout.PAGE_START);
 		
 		/*
 		Titulos tablero = new Titulos("holi ", 30, Color.black);
@@ -183,8 +168,21 @@ public class Domino extends JFrame {
 		
 		// Zona de juego - centralPanel
 		*/
+		//-------------- Panel zona de juego --------------
+		zonaJuego = new JPanel();
+		zonaJuego.setLayout(new GridBagLayout());
 		
+		oponentPanel = new JPanel();
 		
+		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START)
+		
+		this.getContentPane().add(tituloPanel, BorderLayout.CENTER);
+		
+		//-------------- Panel jugador --------------
+		jugadorPanel = new JPanel();
+		jugadorPanel.setLayout(new FlowLayout());
+		
+		this.getContentPane().add(jugadorPanel, BorderLayout.CENTER);
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{

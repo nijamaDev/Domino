@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.Image;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.Point;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -53,6 +56,10 @@ public class Domino extends JFrame {
 				   tableroPanel,// Center > Center
 				   jugadorPanel;// South
 	private ImageJPanel tablero;
+	
+	//coordenadas del mouse
+	private int x;
+	private int y;
 	
 	public Domino() {
 		initGUI();
@@ -232,6 +239,17 @@ public class Domino extends JFrame {
 			Ficha fichaClick = (Ficha)eventMouse.getSource();
 			//ClickedFicha(fichaClick);
 		}
+		
+		public void this_mousePressed(MouseEvent e) {
+            x = e.getX();
+            y = e.getY();
+	    }
+	
+	    public void this_mouseDragged(MouseEvent e) {
+	            Point point = MouseInfo.getPointerInfo().getLocation();
+	            setLocation(point.x - x, point.y - y);
+	            
+	    }
 		
 	}
 }

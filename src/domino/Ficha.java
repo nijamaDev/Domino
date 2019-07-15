@@ -20,10 +20,25 @@ import javax.swing.JLabel;
  */
 public class Ficha extends JLabel {
 	private ImageIcon image;
-	private int idImage;
+	private int vIzq, vDer;
 	
-	public Ficha(ImageIcon image, int idImage) {
+	public Ficha(ImageIcon image, int vIzq, int vDer) {
 		this.image = image;
-		this.idImage = idImage;
+		this.vIzq = vIzq;
+		this.vDer = vDer;
+	}
+
+	/**
+	 * @return the vIzq
+	 */
+	public int getvIzq() {
+		return vIzq;
+	}
+
+	/**
+	 * @return the vDer
+	 */
+	public int getvDer() {
+		return vDer;
 	}
 }

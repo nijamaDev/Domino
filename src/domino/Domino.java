@@ -91,7 +91,7 @@ public class Domino extends JFrame {
 		
 		// crear la GUI
 		this.getContentPane().setPreferredSize(new Dimension(1200, 640));
-		//this.getContentPane().setBackground(Color.black);
+		this.getContentPane().setBackground(Color.black);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -170,19 +170,24 @@ public class Domino extends JFrame {
 		*/
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
-		zonaJuego.setLayout(new GridBagLayout());
 		
 		oponentPanel = new JPanel();
+		oponentPanel.setLayout(new FlowLayout());
 		
-		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START)
+		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
 		
-		this.getContentPane().add(tituloPanel, BorderLayout.CENTER);
+		tableroPanel = new JPanel();
+		tableroPanel.setLayout(new GridBagLayout());
+		
+		zonaJuego.add(tableroPanel, BorderLayout.CENTER);
+		
+		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
 		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel();
-		jugadorPanel.setLayout(new FlowLayout());
+		jugadorPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		
-		this.getContentPane().add(jugadorPanel, BorderLayout.CENTER);
+		this.getContentPane().add(jugadorPanel, BorderLayout.PAGE_END);
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{

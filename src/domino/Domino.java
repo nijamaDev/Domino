@@ -19,6 +19,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -43,7 +44,7 @@ import misComponentes.Titulos;
  * 
  */
 public class Domino extends JFrame {
-	private Image Imagen;
+	
 	private Escuchas escucha;
 	private JButton nuevo, salir;
 	private JPanel tituloPanel, // North
@@ -51,6 +52,7 @@ public class Domino extends JFrame {
 				   oponentPanel,// Center > North
 				   tableroPanel,// Center > Center
 				   jugadorPanel;// South
+	private ImageJPanel tablero;
 	
 	public Domino() {
 		initGUI();
@@ -160,37 +162,43 @@ public class Domino extends JFrame {
 		// Panel del tablero
 		tableroPanel = new JPanel();
 		tableroPanel.setLayout(new GridBagLayout());
+		Image imagen;
+		try {
+			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))).getImage();
+			tablero = new ImageJPanel(imagen);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		zonaJuego.add(tableroPanel, BorderLayout.CENTER);
+		
+		tablero.setLayout(new GridBagLayout());
+		tablero.repaint();
+		tablero.setPreferredSize(new Dimension(1200, 340));
+		JButton nue = new JButton("Nue");
+		nue.addActionListener(escucha);
+		nue.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		
+		tablero.add(nue);
+		Titulos tabl = new Titulos("holi ", 30, Color.black);
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 10;
+		c.gridy = 10;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		tablero.add(tabl);
+		
+		zonaJuego.add(tablero, BorderLayout.CENTER);
 		
 		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
 		
 		//colocar imagen de fondo para tablero
-		class Imagen extends JPanel {
-			
-			
-			public Imagen() {
-				this.setSize(2700, 1700);
-			}
-			
-			public void paint(Graphics g) {
-				Dimension height = getSize();
-				ImageIcon Img = new ImageIcon(getClass().getResource("src/imagenes/tablero.jpg"));
-				g.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
-				
-				setOpaque(false);
-				super.paintComponent(g);
-			}
-			
-			/*
-			public void paint(Graphics g) {
-		        g.drawImage(Imagen, 0, 0, getWidth(), getHeight(),
-		                        this);
-		        
-		        set.Opaque(false);
-			}
-			*/
-		}
+		
 		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel();

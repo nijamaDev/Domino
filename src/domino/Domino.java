@@ -26,6 +26,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.Image;
+import java.awt.Graphics;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -41,6 +43,7 @@ import misComponentes.Titulos;
  * 
  */
 public class Domino extends JFrame {
+	private Image Imagen;
 	private Escuchas escucha;
 	private JButton nuevo, salir;
 	private JPanel tituloPanel, // North
@@ -161,6 +164,33 @@ public class Domino extends JFrame {
 		zonaJuego.add(tableroPanel, BorderLayout.CENTER);
 		
 		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
+		
+		//colocar imagen de fondo para tablero
+		class Imagen extends JPanel {
+			
+			
+			public Imagen() {
+				this.setSize(2700, 1700);
+			}
+			
+			public void paint(Graphics g) {
+				Dimension height = getSize();
+				ImageIcon Img = new ImageIcon(getClass().getResource("src/imagenes/tablero.jpg"));
+				g.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
+				
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+			
+			/*
+			public void paint(Graphics g) {
+		        g.drawImage(Imagen, 0, 0, getWidth(), getHeight(),
+		                        this);
+		        
+		        set.Opaque(false);
+			}
+			*/
+		}
 		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel();

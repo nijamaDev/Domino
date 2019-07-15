@@ -12,6 +12,7 @@
 */
 package domino;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,12 +26,16 @@ import javax.swing.JOptionPane;
  */
 public class Control {
 	private ImageIcon fichaIcon = null;
+	private ImageIcon backIcon;
 	private String imageRoute = "src/imagenes/";
 	private ArrayList<Ficha> pila = new ArrayList<Ficha>(28);
 	private Jugador jugador = new Jugador();
+	private Ficha backFicha;
 	
 	public Control() {
 		try {
+			backIcon = new ImageIcon(ImageIO.read(new File("src/imagenes/back-vertical.png")));//.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
+			backFicha = new Ficha(backIcon);
 			for (int i=0; i<7; i++) {
 				for (int j = i; j<7; j++) {
 					//System.out.println( "i: " + i + ", j: " + j);
@@ -43,6 +48,9 @@ public class Control {
 			JOptionPane.showMessageDialog(null, 
 					"No se ha encontrado la imágen en: \"" + imageRoute + "\"");
 		}
+	}
+	public Ficha getBackFicha() {
+		return backFicha;
 	}
 	
 	public ArrayList<Ficha> getFichasJugador() {

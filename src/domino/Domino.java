@@ -31,12 +31,15 @@ import java.awt.Image;
 import java.awt.Graphics;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.callback.TextOutputCallback;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import misComponentes.Titulos;
 
@@ -47,14 +50,17 @@ public class Domino extends JFrame {
 	
 	private Escuchas escucha;
 	private JButton nuevo, salir;
-	private JPanel tituloPanel, // North
+	private JPanel tituloPanel, // North // título
 				   zonaJuego,	// Center
-				   oponentPanel,// Center > North
-				   tableroPanel,// Center > Center
-				   jugadorPanel;// South
-	private ImageJPanel tablero;
+				   oponentPanel,// Center > North // Fichas computador
+				   jugadorPanel;// South          // Fichas Jugador, dinero, apuesta
+	private ImageJPanel tablero;// Center > South // tablero de juego
+	private Control control;
+	private Ficha back;
+	private JTextArea texto;
 	
 	public Domino() {
+		control = new Control();
 		initGUI();
 
 		// default window configuration
@@ -100,8 +106,8 @@ public class Domino extends JFrame {
 		c.gridx = 1;
 		c.weightx = 10;
 		c.gridheight = 2;
-		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
 		
 		tituloPanel.add(titulo, c);
 		
@@ -113,60 +119,38 @@ public class Domino extends JFrame {
 		salir.setPreferredSize(new Dimension(42,25));
 		salir.addActionListener(escucha);
 		
-		c.gridheight = 1;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
-		c.fill = GridBagConstraints.NONE;
 		c.gridx = 2;
 		c.weightx = 0.01;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		
 		tituloPanel.add(salir, c);
 		
 		this.getContentPane().add(tituloPanel, BorderLayout.PAGE_START);
 		
-		/*
-		Titulos tablero = new Titulos("holi ", 30, Color.black);
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 1;
-		c.gridheight = 6;
-		c.weightx = 0.0;
-		
-		
-		//c.anchor = GridBagConstraints.CENTER;
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		//c.ipadx = 300;
-		//this.getContentPane().add(tablero, c);
-		
-		Titulos tabl = new Titulos("holi ", 30, Color.black);
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridx = 14;
-		c.gridy = 3;
-		c.gridwidth = 1;
-		c.gridheight = 6;
-		//this.getContentPane().add(tabl, c);
-		
-		//zonaJuego.setBorder(new TitledBorder("Zona Juego"));
-		
-		// Zona de juego - centralPanel
-		*/
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
 		zonaJuego.setBackground(Color.black);
+		
 		// Panel del oponente (computador)
 		oponentPanel = new JPanel();
 		oponentPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-		JButton nue = new JButton("Nue");
-		nue.addActionListener(escucha);
-		nue.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
-		oponentPanel.add(nue);
+		oponentPanel.setPreferredSize(new Dimension(1150, 100));
+		oponentPanel.setBackground(Color.black);
+		Titulos oponente = new Titulos("Oponente:", 25, Color.black);
+		
+		oponentPanel.add(oponente);
+		
+		back = control.getBackFicha();
+		back.setPreferredSize(new Dimension(50, 100));
+
+		oponentPanel.add(back);
 		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
 		
 		
 		// Panel del tablero
-		tableroPanel = new JPanel();
-		tableroPanel.setLayout(new GridBagLayout());
 		Image imagen;
 		try {
 			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))).getImage();
@@ -175,8 +159,6 @@ public class Domino extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		tablero.setLayout(new GridBagLayout());
 		tablero.repaint();
 		tablero.setPreferredSize(new Dimension(1150, 400));
@@ -200,12 +182,23 @@ public class Domino extends JFrame {
 		
 		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
 		
-		//colocar imagen de fondo para tablero
-		
-		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel();
 		jugadorPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+		jugadorPanel.setPreferredSize(new Dimension(1200, 110));
+		jugadorPanel.setBackground(Color.black);
+		
+		texto = new JTextArea();
+		texto.setForeground(Color.white);
+		texto.setBackground(Color.black);
+		texto.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+		texto.setText(
+				"Dinero: \n\n" +
+				"Apuesta: ");
+		texto.setEditable(false);
+		texto.setPreferredSize(new Dimension(100, 100));
+		
+		jugadorPanel.add(texto);
 		
 		this.getContentPane().add(jugadorPanel, BorderLayout.PAGE_END);
 	}

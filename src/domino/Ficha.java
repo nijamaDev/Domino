@@ -22,8 +22,15 @@ public class Ficha extends JLabel {
 	private ImageIcon image;
 	private int vIzq, vDer;
 	
+	public Ficha() {}
+	
+	public Ficha(ImageIcon image) {
+		this.image = image;
+		setIcon(image);
+	}
 	public Ficha(ImageIcon image, int vIzq, int vDer) {
 		this.image = image;
+		setIcon(image);
 		this.vIzq = vIzq;
 		this.vDer = vDer;
 	}

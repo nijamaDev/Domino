@@ -25,6 +25,5 @@ public class Ficha extends JLabel {
 	public Ficha(ImageIcon image, int idImage) {
 		this.image = image;
 		this.idImage = idImage;
-	
 	}
 }

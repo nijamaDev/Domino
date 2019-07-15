@@ -39,7 +39,7 @@ public class Domino extends JFrame {
 			/*
 			initGUI();
 
-			 default windows configuration
+			// default window configuration
 			this.setUndecorated(true);
 			pack();
 			this.setResizable(false);

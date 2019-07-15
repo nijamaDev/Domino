@@ -85,12 +85,12 @@ public class Domino extends JFrame {
 		nuevo.addActionListener(escucha);
 		add(nuevo, BorderLayout.NORTH);
 		
-		Titulos titulo = new Titulos("Puzzle Gen�rico #1", 30, Color.black);
+		Titulos titulo = new Titulos("Dominó", 30, Color.black);
 		add(titulo, BorderLayout.NORTH);
 		
 		salir = new JButton("Salir");
 		salir.addActionListener(escucha);
-		add(salir, BorderLayout.NORTH);
+		add(salir, BorderLayout.LINE_START);
 		
 		// Zona de juego - centralPanel
 		

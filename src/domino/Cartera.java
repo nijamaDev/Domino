@@ -19,14 +19,22 @@ public class Cartera {
 	
 	private int dinero;
 	
-	public void dinero(int dinero) {
+	public Cartera(int dinero) {
 		this.dinero = dinero;
-		
 	}
 	
+	public void addDinero(int suma) {
+		dinero += suma;
+	}
 	
 	public int getDinero() {
 		return dinero;
 	}
-
+	
+	public boolean puedeApostar(int apuesta) {
+		if (dinero < apuesta)
+			return false;
+		else return true;
+	}
+	
 }

@@ -28,9 +28,12 @@ public class Control {
 	private ImageIcon fichaIcon = null;
 	private ImageIcon backIcon;
 	private String imageRoute = "src/imagenes/";
-	private ArrayList<Ficha> pila = new ArrayList<Ficha>(28);
+	private ArrayList<Ficha> fichas = new ArrayList<Ficha>(28);
+	private ArrayList<Ficha> pila = new ArrayList<Ficha>();
 	private Jugador jugador = new Jugador();
+	private Cartera cartera;
 	private Ficha backFicha;
+	private int apuesta;
 	
 	public Control() {
 		try {
@@ -40,7 +43,7 @@ public class Control {
 				for (int j = i; j<7; j++) {
 					//System.out.println( "i: " + i + ", j: " + j);
 					fichaIcon = new ImageIcon(ImageIO.read(new File(imageRoute +i+ "-" +j+ ".png")));
-					pila.add(new Ficha(fichaIcon, i, j));
+					fichas.add(new Ficha(fichaIcon, i, j));
 				}
 			}
 		} catch (IOException e) {
@@ -49,8 +52,30 @@ public class Control {
 					"No se ha encontrado la imágen en: \"" + imageRoute + "\"");
 		}
 	}
+	
+	public void nuevaRonda() {
+		pila.clear();
+		pila.addAll(fichas);
+		apuesta = 0;
+		
+	}
+	
+	public void nuevaPartida() {
+		cartera = new Cartera(30);
+		jugador = new Jugador();
+		nuevaRonda();
+	}
+	
 	public Ficha getBackFicha() {
 		return backFicha;
+	}
+	
+	public int getDinero() {
+		return cartera.getDinero();
+	}
+	
+	public int getApuesta() {
+		return apuesta;
 	}
 	
 	public ArrayList<Ficha> getFichasJugador() {

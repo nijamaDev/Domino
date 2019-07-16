@@ -78,6 +78,15 @@ public class Domino extends JFrame {
 		this.setVisible(true);
 	}
 	
+	public void nuevaRonda() {
+		control.nuevaRonda();
+	}
+	
+	public void nuevaPartida() {
+		control.nuevaPartida();
+		nuevaRonda();
+	}
+	
 	private void initGUI() {
 		// define window container and layout
 		
@@ -160,7 +169,8 @@ public class Domino extends JFrame {
 		// Panel del tablero
 		Image imagen;
 		try {
-			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))).getImage();
+			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))
+								  ).getImage().getScaledInstance(1150, 400, Image.SCALE_SMOOTH);
 			tablero = new ImageJPanel(imagen);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -199,15 +209,23 @@ public class Domino extends JFrame {
 		texto.setForeground(Color.white);
 		texto.setBackground(Color.black);
 		texto.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
-		texto.setText(
-				"Dinero: \n\n" +
-				"Apuesta: ");
 		texto.setEditable(false);
 		texto.setPreferredSize(new Dimension(100, 100));
+		//printDinero();
 		
 		jugadorPanel.add(texto);
 		
 		this.getContentPane().add(jugadorPanel, BorderLayout.PAGE_END);
+	}
+	
+	private void printDinero() { // Muestra el dinero y la apuesta actual
+		texto.setText(
+				"Dinero:\n"+ control.getDinero() + "\n" +
+				"Apuesta:\n" + control.getApuesta());
+	}
+	
+	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
+		
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{

@@ -24,7 +24,6 @@ public class Jugador {
 	
 	public void addFicha(Ficha nuevaFicha) {
 		fichasDelJugador.add(nuevaFicha);
-			
 	}
 	
 	

@@ -27,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -165,7 +166,12 @@ public class Domino extends JFrame {
 		
 		back = control.getBackFicha();
 		back.setPreferredSize(new Dimension(50, 100));
-
+		
+		//Funcion para girar imagen
+		AffineTransform tx = AffineTransform.getRotateInstance(Math.PI/2,
+	            back.getWidth()/2, back.getHeight()/2);
+		
+		
 		oponentPanel.add(back);
 		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
@@ -326,5 +332,7 @@ public class Domino extends JFrame {
 
 	}
 
+	
+	
 }
 

@@ -1,15 +1,17 @@
 /**
-  Archivo: Control.java
-  Fecha creación:		Jul 14, 2019
-  Última modificación:	mes d, 2019
-  Versión: 0.1
+  Archivo: Vista.java
+  Fecha creaciÃ³n:		Jul 14, 2019
+  Ãšltima modificaciÃ³n:	Jul 15, 2019
+  VersiÃ³n: 0.4
   Licencia: GPL
 
-  Autores:	Nicolas Jaramillo Mayor        1840558
+  Autores:	Nicolas Jaramillo Mayor         1840558
+  			Crhistian Alexander Garcia		1832124
 
   Email:	nicolas.jaramillo@correounivalle.edu.co
-
+  			garcia.crhistian@correounivalle.edu.co
 */
+
 package domino;
 
 import java.awt.Image;
@@ -49,7 +51,7 @@ public class Control {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, 
-					"No se ha encontrado la imágen en: \"" + imageRoute + "\"");
+					"No se ha encontrado la imï¿½gen en: \"" + imageRoute + "\"");
 		}
 	}
 	
@@ -58,7 +60,7 @@ public class Control {
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
-		for (int i=0; i<7; i++) {  // Saca 7 elementos de la pila para jugador y 7 para la máquina
+		for (int i=0; i<7; i++) {  // Saca 7 elementos de la pila para jugador y 7 para la mï¿½quina
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
 			pila.remove(0);
@@ -66,7 +68,7 @@ public class Control {
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}
-		if (!inicia) { // si no inicia el jugador, inicia la máquina
+		if (!inicia) { // si no inicia el jugador, inicia la mï¿½quina
 			//oponente.juega(izq, der);
 		}
 		

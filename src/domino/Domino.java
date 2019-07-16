@@ -113,6 +113,7 @@ public class Domino extends JFrame {
 		
 		// Titulo
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
+		titulo.addMouseListener(escucha);
 		
 		c.gridx = 1;
 		c.weightx = 10;

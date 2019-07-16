@@ -68,12 +68,15 @@ public class Control {
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
 			pila.remove(0);
-			pila.get(0).voltearFicha();
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}
-		if (!inicia) { // si no inicia el jugador, inicia la m�quina
-			//oponente.juega(izq, der);
+		 // si no inicia el jugador, inicia la m�quina
+		//oponente.juega(inicia);
+		while(true) {
+			//jugador.juega();
+			//oponente.juega();
+			break;
 		}
 		
 		

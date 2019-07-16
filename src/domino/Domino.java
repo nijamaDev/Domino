@@ -16,6 +16,7 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -41,11 +42,13 @@ import java.awt.Point;
 
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.TextOutputCallback;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -68,6 +71,7 @@ public class Domino extends JFrame {
 	private ImageJPanel tablero;// Center > South // tablero de juego
 	private Control control;
 	private JTextArea texto;
+	private MoveMouseListener moveEscucha;
 	
 	//coordenadas del mouse
 	private int x;
@@ -84,6 +88,9 @@ public class Domino extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		nuevaPartida();
+		for (int i=0; i<28; i++) {
+			control.getPila().get(i).addMouseListener(escucha);
+		}
 	}
 	
 	public void nuevaRonda() {
@@ -278,6 +285,13 @@ public class Domino extends JFrame {
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{
+		private JLabel dragLabel = null;
+        private int dragLabelWidthDiv2;
+        private int dragLabelHeightDiv2;
+        private JPanel clickedPanel = null;
+        private JPanel destino;
+        private boolean cambiar;
+        private JLabel origen;
 
 		@Override
 		public void actionPerformed(ActionEvent eventAction) {
@@ -294,23 +308,31 @@ public class Domino extends JFrame {
 		}
 		
 		@Override
-		public void mouseClicked(MouseEvent eventMouse) {
-			//intercambiar fichas
-			Ficha fichaClick = (Ficha)eventMouse.getSource();
-			//ClickedFicha(fichaClick);
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if(cambiar==true) {
+				destino = (JPanel)e.getSource();
+				destino.add(origen);
+				//origen.setIcon(icon);
+				cambiar=false;
+			}
 		}
-		/*
-		public void this_mousePressed(MouseEvent e) {
-            x = e.getX();
-            y = e.getY();
-	    }
-	
-	    public void this_mouseDragged(MouseEvent e) {
-	            Point point = MouseInfo.getPointerInfo().getLocation();
-	            setLocation(point.x - x, point.y - y);
-	            
-	    }
-		*/
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if(cambiar==false) {
+				origen = (JLabel)e.getSource();
+				cambiar=true;
+			}
+		}
+		
 	}
 	
 	private class MoveMouseListener implements MouseListener, MouseMotionListener {

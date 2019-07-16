@@ -1,8 +1,8 @@
 /**
-  Archivo: Vista.java
   Fecha creación:		Jul 14, 2019
   Última modificación:	Jul 15, 2019
   Versión: 0.4
+  Archivo: Cartera.java
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558

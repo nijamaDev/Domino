@@ -16,6 +16,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -26,19 +27,18 @@ import javax.swing.JOptionPane;
  */
 public class Control {
 	private ImageIcon fichaIcon = null;
-	private ImageIcon backIcon;
 	private String imageRoute = "src/imagenes/";
 	private ArrayList<Ficha> fichas = new ArrayList<Ficha>(28);
 	private ArrayList<Ficha> pila = new ArrayList<Ficha>();
-	private Jugador jugador = new Jugador();
+	private Jugador jugador;
+	private Oponente oponente;
 	private Cartera cartera;
-	private Ficha backFicha;
 	private int apuesta;
 	
 	public Control() {
 		try {
-			backIcon = new ImageIcon(ImageIO.read(new File("src/imagenes/back-vertical.png")));//.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
-			backFicha = new Ficha(backIcon);
+			Ficha.back = new ImageIcon(ImageIO.read(new File("src/imagenes/back-vertical.png")));//.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
+			
 			for (int i=0; i<7; i++) {
 				for (int j = i; j<7; j++) {
 					//System.out.println( "i: " + i + ", j: " + j);
@@ -53,21 +53,30 @@ public class Control {
 		}
 	}
 	
-	public void nuevaRonda() {
+	public void nuevaRonda(boolean inicia) {
 		pila.clear();
-		pila.addAll(fichas);
+		pila.addAll(fichas);       // Crea una pila con todas las fichas
+		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
+		for (int i=0; i<7; i++) {  // Saca 7 elementos de la pila para jugador y 7 para la máquina
+			pila.get(0).destaparFicha();
+			jugador.addFicha(pila.get(0));
+			pila.remove(0);
+			pila.get(0).voltearFicha();
+			oponente.addFicha(pila.get(0));
+			pila.remove(0);
+		}
+		if (!inicia) { // si no inicia el jugador, inicia la máquina
+			//oponente.juega(izq, der);
+		}
+		
 		
 	}
 	
 	public void nuevaPartida() {
 		cartera = new Cartera(30);
 		jugador = new Jugador();
-		nuevaRonda();
-	}
-	
-	public Ficha getBackFicha() {
-		return backFicha;
+		oponente = new Oponente();
 	}
 	
 	public int getDinero() {
@@ -80,5 +89,9 @@ public class Control {
 	
 	public ArrayList<Ficha> getFichasJugador() {
 		return jugador.getFichasJugador();
+	}
+	
+	public ArrayList<Ficha> getFichasOponente() {
+		return oponente.getFichasJugador();
 	}
 }

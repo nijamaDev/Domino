@@ -63,7 +63,6 @@ public class Domino extends JFrame {
 				   jugadorPanel;// South          // Fichas Jugador, dinero, apuesta
 	private ImageJPanel tablero;// Center > South // tablero de juego
 	private Control control;
-	private Ficha back;
 	private JTextArea texto;
 	
 	//coordenadas del mouse
@@ -80,10 +79,13 @@ public class Domino extends JFrame {
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		nuevaPartida();
 	}
 	
 	public void nuevaRonda() {
-		control.nuevaRonda();
+		control.nuevaRonda(escogerInicio());
+		printDinero();
+		printFichas();
 	}
 	
 	public void nuevaPartida() {
@@ -163,10 +165,12 @@ public class Domino extends JFrame {
 		
 		oponentPanel.add(oponente);
 		
+		/*
 		back = control.getBackFicha();
 		back.setPreferredSize(new Dimension(50, 100));
 
 		oponentPanel.add(back);
+		*/
 		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
 		
@@ -198,7 +202,7 @@ public class Domino extends JFrame {
 		c.gridy = 10;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		tablero.add(tabl);
+		tablero.add(tabl, c);
 		
 		zonaJuego.add(tablero, BorderLayout.PAGE_END);
 		
@@ -230,7 +234,20 @@ public class Domino extends JFrame {
 	}
 	
 	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
+		int numFichas = control.getFichasOponente().size();
+		for (int i=0; i<numFichas; i++) {
+			oponentPanel.add(control.getFichasOponente().get(i));
+		}
+		numFichas = control.getFichasJugador().size();
+		for (int i=0; i<numFichas; i++) {
+			jugadorPanel.add(control.getFichasJugador().get(i));
+			
+		}
 		
+	}
+	
+	private boolean escogerInicio() { // Escoge quién inicia la partida
+		return false; //place holder
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{
@@ -238,12 +255,12 @@ public class Domino extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent eventAction) {
 			// TODO Auto-generated method stub
-			// responde a los botones ayuda, revolver, salir
+			// responde a los botones nuevo y salir
 			if (eventAction.getSource() == salir) {
 				System.exit(0);
-			}
-			
-			else {
+			} else if (eventAction.getSource() == nuevo) {
+				nuevaPartida();
+			} else {
 				// llamar a la funcion ???
 				
 			}
@@ -269,7 +286,7 @@ public class Domino extends JFrame {
 		*/
 	}
 	
-	class MoveMouseListener implements MouseListener, MouseMotionListener {
+	private class MoveMouseListener implements MouseListener, MouseMotionListener {
 		JComponent target;
 		Point start_drag;
 		Point start_loc;

@@ -19,20 +19,36 @@ import javax.swing.JLabel;
  * 
  */
 public class Ficha extends JLabel {
-	private ImageIcon image;
+	public static ImageIcon back;
+	private ImageIcon front;
+	
 	private int vIzq, vDer;
 	
 	public Ficha() {}
 	
+	public Ficha(Ficha newFicha) {
+		front = newFicha.front;
+	}
+	
+	
+
 	public Ficha(ImageIcon image) {
-		this.image = image;
-		setIcon(image);
+		this.front = image;
+		setIcon(back);
 	}
 	public Ficha(ImageIcon image, int vIzq, int vDer) {
-		this.image = image;
-		setIcon(image);
+		this.front = image;
+		setIcon(back);
 		this.vIzq = vIzq;
 		this.vDer = vDer;
+	}
+	
+	public void voltearFicha() {
+		setIcon(back);
+	}
+	
+	public void destaparFicha() {
+		setIcon(front);
 	}
 
 	/**
@@ -47,5 +63,12 @@ public class Ficha extends JLabel {
 	 */
 	public int getvDer() {
 		return vDer;
+	}
+	
+	/**
+	 * @return the front
+	 */
+	public ImageIcon getFront() {
+		return front;
 	}
 }

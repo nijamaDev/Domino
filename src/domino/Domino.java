@@ -53,6 +53,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.TransferHandler;
 
 import misComponentes.Titulos;
 
@@ -67,11 +68,11 @@ public class Domino extends JFrame {
 				   zonaJuego,	// Center
 				   oponentPanel,// Center > North // Fichas computador
 				   pilaPanel,	// West //fichas de la pila
-				   jugadorPanel;// South          // Fichas Jugador, dinero, apuesta
-	private ImageJPanel tablero;// Center > South // tablero de juego
+				   jugadorPanel;// center > South          // Fichas Jugador, dinero, apuesta
+	private ImageJPanel tablero;// Center > Center // tablero de juego
 	private Control control;
 	private JTextArea texto;
-	private MoveMouseListener moveEscucha;
+	
 	
 	//coordenadas del mouse
 	private int x;
@@ -197,6 +198,7 @@ public class Domino extends JFrame {
 			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))
 								  ).getImage().getScaledInstance(1150, 400, Image.SCALE_SMOOTH);
 			tablero = new ImageJPanel(imagen);
+			tablero.addMouseMotionListener(escucha);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -325,16 +327,21 @@ public class Domino extends JFrame {
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
+		/*public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if(cambiar==false) {
 				origen = (JLabel)e.getSource();
 				cambiar=true;
 			}
-		}
+		}*/
+		public void mousePressed(MouseEvent e) {
+		      JComponent c = (JComponent) e.getSource();
+		      TransferHandler handler = c.getTransferHandler();
+		      handler.exportAsDrag(c, e, TransferHandler.COPY);
+		    }
 		
 	}
-	
+	/*
 	private class MoveMouseListener implements MouseListener, MouseMotionListener {
 		JComponent target;
 		Point start_drag;
@@ -390,7 +397,7 @@ public class Domino extends JFrame {
 		public void mouseMoved(MouseEvent e) {
 		}
 
-	}
+	}*/
 
 	
 	

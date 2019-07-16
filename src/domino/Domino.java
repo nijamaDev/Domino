@@ -14,6 +14,7 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -24,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ import javax.imageio.ImageIO;
 import javax.security.auth.callback.TextOutputCallback;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -118,6 +122,7 @@ public class Domino extends JFrame {
 		
 		// Titulo
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
+		titulo.addMouseListener(escucha);
 		
 		c.gridx = 1;
 		c.weightx = 10;
@@ -250,7 +255,7 @@ public class Domino extends JFrame {
 			Ficha fichaClick = (Ficha)eventMouse.getSource();
 			//ClickedFicha(fichaClick);
 		}
-		
+		/*
 		public void this_mousePressed(MouseEvent e) {
             x = e.getX();
             y = e.getY();
@@ -261,7 +266,65 @@ public class Domino extends JFrame {
 	            setLocation(point.x - x, point.y - y);
 	            
 	    }
-		
+		*/
 	}
+	
+	class MoveMouseListener implements MouseListener, MouseMotionListener {
+		JComponent target;
+		Point start_drag;
+		Point start_loc;
+
+		public MoveMouseListener(JComponent target) {
+			this.target = target;
+		}
+
+		public JFrame getFrame(Container target) {
+			if (target instanceof JFrame) {
+			return (JFrame) target;
+			}
+			
+			return getFrame(target.getParent());
+		}
+
+		Point getScreenLocation(MouseEvent e) {
+			Point cursor = e.getPoint();
+			Point target_location = this.target.getLocationOnScreen();
+			return new Point((int) (target_location.getX() + cursor.getX()),
+			(int) (target_location.getY() + cursor.getY()));
+		}
+
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		public void mouseExited(MouseEvent e) {
+		}
+
+		public void mousePressed(MouseEvent e) {
+			this.start_drag = this.getScreenLocation(e);
+			this.start_loc = this.getFrame(this.target).getLocation();
+		}
+
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			Point current = this.getScreenLocation(e);
+			Point offset = new Point((int) current.getX() - (int) start_drag.getX(),
+			(int) current.getY() - (int) start_drag.getY());
+			JFrame frame = this.getFrame(target);
+			Point new_location = new Point(
+			(int) (this.start_loc.getX() + offset.getX()), (int) (this.start_loc
+			.getY() + offset.getY()));
+			frame.setLocation(new_location);
+		}
+
+		public void mouseMoved(MouseEvent e) {
+		}
+
+	}
+
 }
 

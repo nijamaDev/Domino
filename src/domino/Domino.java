@@ -61,6 +61,7 @@ public class Domino extends JFrame {
 	private JPanel tituloPanel, // North // título
 				   zonaJuego,	// Center
 				   oponentPanel,// Center > North // Fichas computador
+				   pilaPanel,	// West //fichas de la pila
 				   jugadorPanel;// South          // Fichas Jugador, dinero, apuesta
 	private ImageJPanel tablero;// Center > South // tablero de juego
 	private Control control;
@@ -101,7 +102,7 @@ public class Domino extends JFrame {
 		escucha = new Escuchas();
 		
 		// crear la GUI
-		this.getContentPane().setPreferredSize(new Dimension(1200, 640));
+		this.getContentPane().setPreferredSize(new Dimension(1270, 640));
 		this.getContentPane().setBackground(Color.black);
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -231,6 +232,17 @@ public class Domino extends JFrame {
 		jugadorPanel.add(texto);
 		
 		this.getContentPane().add(jugadorPanel, BorderLayout.PAGE_END);
+		
+		pilaPanel = new JPanel();
+		pilaPanel.setLayout(new FlowLayout());
+		pilaPanel.setPreferredSize(new Dimension(110, 615));
+		pilaPanel.setBackground(Color.black);
+		
+		Titulos tituloPila = new Titulos("Fichas ", 30, Color.black);
+		
+		pilaPanel.add(tituloPila);
+		
+		this.getContentPane().add(pilaPanel, BorderLayout.LINE_END);
 	}
 	
 	private void printDinero() { // Muestra el dinero y la apuesta actual
@@ -240,15 +252,22 @@ public class Domino extends JFrame {
 	}
 	
 	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
-		int numFichas = control.getFichasOponente().size();
-		for (int i=0; i<numFichas; i++) {
-			oponentPanel.add(control.getFichasOponente().get(i));
-		}
-		numFichas = control.getFichasJugador().size();
-		for (int i=0; i<numFichas; i++) {
-			jugadorPanel.add(control.getFichasJugador().get(i));
+		ArrayList<Ficha> list;
+		list = control.getFichasOponente();
+		int numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+			oponentPanel.add(list.get(i));
+		
+		list = control.getFichasJugador();
+		numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+			jugadorPanel.add(list.get(i));
+		
+		list = control.getPila();
+		numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+			pilaPanel.add(list.get(i));
 			
-		}
 		
 	}
 	

@@ -94,4 +94,8 @@ public class Control {
 	public ArrayList<Ficha> getFichasOponente() {
 		return oponente.getFichasJugador();
 	}
+	
+	public ArrayList<Ficha> getPila() {
+		return pila;
+	}
 }

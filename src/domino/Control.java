@@ -1,12 +1,8 @@
 /**
-<<<<<<< HEAD
   Archivo: Control.java
-=======
->>>>>>> fb4ee7bfdc1bd6b9b9748b98f73e9bdb4517f3b3
   Fecha creación:		Jul 14, 2019
   Última modificación:	Jul 15, 2019
   Versión: 0.4
-  Archivo: Control.java
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558

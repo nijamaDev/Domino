@@ -62,7 +62,8 @@ import misComponentes.Titulos;
  */
 public class Domino extends JFrame {
 
-	private static final Dimension WINDOW_SIZE = new Dimension(1270, 640);
+	private static final int WINDOW_HSIZE = 1270;
+	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, 640);
 	private static final Dimension FICHA_VSIZE = new Dimension(50, 100);
 	private static final Dimension FICHA_HSIZE = new Dimension(100, 50);
 	private Escuchas escucha;
@@ -115,10 +116,17 @@ public class Domino extends JFrame {
 		// define window container and layout
 		layeredPane = new JLayeredPane();
 		layeredPane.setPreferredSize(WINDOW_SIZE);
-		allPanel = new JPanel();
+		allPanel = new JPanel(new BorderLayout());
 		allPanel.setPreferredSize(WINDOW_SIZE);
-		this.getContentPane().add(layeredPane);
-		layeredPane.add(allPanel);
+		//this.getContentPane().setPreferredSize(WINDOW_SIZE);
+		this.getContentPane().add(layeredPane, BorderLayout.CENTER);
+		allPanel.setSize(layeredPane.getPreferredSize());
+		allPanel.setLocation(0, 0);
+		//layeredPane.setOpaque(false);
+		//allPanel.setOpaque(false);
+		this.getContentPane().setBackground(Color.black);
+		layeredPane.add(allPanel, JLayeredPane.DEFAULT_LAYER);
+		add(layeredPane);
 		
 		
 		
@@ -135,6 +143,7 @@ public class Domino extends JFrame {
 		tituloPanel = new JPanel();
 		tituloPanel.setLayout(new GridBagLayout());
 		tituloPanel.setBackground(Color.black);
+		//tituloPanel.setPreferredSize(new Dimension(WINDOW_HSIZE, 100));
 		
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
@@ -153,9 +162,9 @@ public class Domino extends JFrame {
 		//titulo.addMouseListener(escucha);
 		
 		c.gridx = 1;
-		c.weightx = 10;
+		c.weightx = 1;
 		c.gridheight = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.CENTER;
 		
 		tituloPanel.add(titulo, c);
@@ -376,6 +385,43 @@ public class Domino extends JFrame {
             dragLabel.setLocation(x, y);
             repaint();
             System.out.println("mouse dragged");
+        }
+		
+		@Override
+        public void mouseReleased(MouseEvent me) {
+            if (dragLabel == null) {
+                return;
+            }
+            remove(dragLabel); // remove dragLabel for drag layer of JLayeredPane
+            JPanel droppedPanel = (JPanel) jugadorPanel.getComponentAt(me.getPoint());
+            if (droppedPanel == null) {
+                // if off the grid, return label to home
+                clickedPanel.add(dragLabel);
+                clickedPanel.revalidate();
+            } else {
+                int r = -1;
+                /*searchPanelGrid: for (int row = 0; row < panelGrid.length; row++) {
+                    for (int col = 0; col < panelGrid[row].length; col++) {
+                        if (panelGrid[row][col] == droppedPanel) {
+                            r = row;
+                            c = col;
+                            break searchPanelGrid;
+                        }
+                    }
+                }*/
+
+                if (r == -1) {
+                    // if off the grid, return label to home
+                    clickedPanel.add(dragLabel);
+                    clickedPanel.revalidate();
+                } else {
+                    droppedPanel.add(dragLabel);
+                    droppedPanel.revalidate();
+                }
+            }
+
+            repaint();
+            dragLabel = null;
         }
 		
 		

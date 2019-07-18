@@ -57,6 +57,8 @@ public class Control {
 	
 	public void nuevaRonda(boolean inicia) {
 		pila.clear();
+		for(int i=0; i<fichas.size(); i++)
+			fichas.get(i).voltearFicha();
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
@@ -64,6 +66,7 @@ public class Control {
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
 			pila.remove(0);
+			//pila.get(0).voltearFicha();
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}

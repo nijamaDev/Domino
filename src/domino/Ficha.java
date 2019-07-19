@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 public class Ficha extends JLabel {
 	public static ImageIcon back;
 	private ImageIcon front;
+	private RotatedIcon rotateIcon;
 	
 	private int vIzq, vDer;
 	
@@ -43,6 +44,11 @@ public class Ficha extends JLabel {
 		setIcon(back);
 		this.vIzq = vIzq;
 		this.vDer = vDer;
+	}
+	
+	public void girarFicha() {
+		rotateIcon = new RotatedIcon(front);
+		setIcon(rotateIcon);
 	}
 	
 	public void voltearFicha() {

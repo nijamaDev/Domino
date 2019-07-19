@@ -16,44 +16,28 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.Image;
-import java.awt.Graphics;
-import java.awt.MouseInfo;
-import java.awt.Point;
 
 
 import javax.imageio.ImageIO;
-import javax.security.auth.callback.TextOutputCallback;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.TransferHandler;
 
 import misComponentes.Titulos;
 
@@ -64,11 +48,13 @@ public class Domino extends JFrame {
 
 	private static final int WINDOW_HSIZE = 1270;
 	private static final int WINDOW_VSIZE = 640;
+	private static final int FICHA_HSIZE = 50;
+	private static final int FICHA_VSIZE = 100;
 	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, WINDOW_VSIZE);
-	private static final Dimension FICHA_VSIZE = new Dimension(50, 100);
-	private static final Dimension FICHA_HSIZE = new Dimension(100, 50);
+	private static final Dimension FICHA_V = new Dimension(FICHA_HSIZE, FICHA_VSIZE);
+	private static final Dimension FICHA_H = new Dimension(FICHA_VSIZE, FICHA_HSIZE);
 	private Escuchas escucha;
-	private JButton nuevo, salir;
+	private JButton nuevo, salir, getFicha;
 	private JLayeredPane layeredPane;
 	private JPanel allPanel,
 				   tituloPanel, // North // título
@@ -79,11 +65,6 @@ public class Domino extends JFrame {
 	private ImageJPanel tablero;// Center > Center // tablero de juego
 	private Control control;
 	private JTextArea texto;
-	
-	
-	//coordenadas del mouse
-	private int x;
-	private int y;
 	
 	public Domino() {
 		control = new Control();
@@ -97,9 +78,6 @@ public class Domino extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		nuevaPartida();
-		/*for (int i=0; i<control.getPila().size(); i++) {
-			control.getPila().get(i).addMouseListener(escucha);
-		}*/
 	}
 	
 	public void nuevaRonda() {
@@ -117,12 +95,8 @@ public class Domino extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// define window container and layout
 		layeredPane = new JLayeredPane();
-		layeredPane.addMouseListener(escucha);
-		layeredPane.addMouseMotionListener(escucha);
 		layeredPane.setPreferredSize(WINDOW_SIZE);
 		allPanel = new JPanel(new BorderLayout());
-		allPanel.setPreferredSize(WINDOW_SIZE);
-		//this.getContentPane().setPreferredSize(WINDOW_SIZE);
 		this.getContentPane().add(layeredPane, BorderLayout.CENTER);
 		allPanel.setSize(layeredPane.getPreferredSize());
 		allPanel.setLocation(0, 0);
@@ -131,16 +105,9 @@ public class Domino extends JFrame {
 		this.getContentPane().setBackground(Color.black);
 		layeredPane.add(allPanel, JLayeredPane.DEFAULT_LAYER);
 		add(layeredPane);
-		
-		
-		
 		// crear el escucha
 		escucha = new Escuchas();
-		//addMouseListener(escucha);
-		//addMouseMotionListener(escucha);
 		// crear la GUI
-		//this.getContentPane().setPreferredSize(new Dimension(1270, 640));
-		//this.getContentPane().setBackground(Color.black);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -148,7 +115,6 @@ public class Domino extends JFrame {
 		tituloPanel = new JPanel();
 		tituloPanel.setLayout(new GridBagLayout());
 		tituloPanel.setBackground(Color.black);
-		//tituloPanel.setPreferredSize(new Dimension(WINDOW_HSIZE, 100));
 		
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
@@ -226,15 +192,13 @@ public class Domino extends JFrame {
 			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))
 								  ).getImage().getScaledInstance(1150, 400, Image.SCALE_SMOOTH);
 			tablero = new ImageJPanel(imagen);
-			//tablero.addMouseListener(escucha);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		tablero.setLayout(new GridBagLayout());
-		tablero.repaint();
 		tablero.setPreferredSize(new Dimension(1150, 400));
-		
+		tablero.repaint();
 		
 		c.gridx = 0;
 		c.gridy = 0;
@@ -299,33 +263,37 @@ public class Domino extends JFrame {
 	
 	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
 		ArrayList<Ficha> list;
+		Ficha ficha;
+		int numFichas;
+		// Mostrar fichas del Oponente
 		list = control.getFichasOponente();
-		int numFichas = list.size();
+		numFichas = list.size();
 		for (int i=0; i<numFichas; i++)
-			oponentPanel.add(list.get(i));
-		
+		{
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
+			oponentPanel.add(ficha);
+		}
+		// Mostrar fichas del Jugador
 		list = control.getFichasJugador();
 		numFichas = list.size();
 		for (int i=0; i<numFichas; i++)
 		{
-			JPanel fichaPanel = new JPanel();
-			fichaPanel.setPreferredSize(FICHA_VSIZE);
-			Ficha ficha = list.get(i);
-			//control.getFichasJugador().get(i).addMouseListener(escucha);
-			//control.getFichasJugador().get(i).addMouseMotionListener(escucha);
-			//fichaPanel.add(ficha);
-			//jugadorPanel.add(fichaPanel);
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
 			jugadorPanel.add(ficha);
-			
 		}
-		
+		// Mostrar fichas de la pila de fichas restantes
 		list = control.getPila();
 		numFichas = list.size();
 		for (int i=0; i<numFichas; i++)
-			pilaPanel.add(list.get(i));
+		{
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
+			pilaPanel.add(ficha);
+		}
 		revalidate();
 		repaint();
-		
 	}
 	
 	private boolean escogerInicio() { // Escoge quién inicia la partida
@@ -333,9 +301,8 @@ public class Domino extends JFrame {
 	}
 	
 	private class Escuchas extends MouseAdapter implements ActionListener{
-		private JLabel dragLabel = null;
-        private int dragLabelWidthDiv2;
-        private int dragLabelHeightDiv2;
+		private Ficha dragFicha = null;
+        private int x, y, dragFichaHCenter, dragFichaVCenter;
         private JPanel clickedPanel = null;
 
 		@Override
@@ -346,65 +313,62 @@ public class Domino extends JFrame {
 				System.exit(0);
 			} else if (eventAction.getSource() == nuevo) {
 				nuevaPartida();
-			} else {
-				// llamar a la funcion ???
-				
+			} else if (eventAction.getSource() == getFicha) {
+				//getFicha();
 			}
 		}
 		
 		@Override
         public void mousePressed(MouseEvent me) {
-			System.out.println("mouse pressed");
-            clickedPanel = jugadorPanel;
+			clickedPanel = jugadorPanel;
+            if (!(clickedPanel.getComponentAt(me.getPoint()) instanceof Ficha)) {
+            	return; // Sino es una Ficha lo que se clickeo, se cancela.
+            }
             ArrayList<Ficha> fichasJugador = control.getFichasJugador();
-            if (fichasJugador.size() < 1)
-            	return;
+            // Busca cuál de las fichas del jugador fue la que se clickeo.
             for (int i=0; i < fichasJugador.size(); i++) {
-            	if ((JLabel) clickedPanel.getComponentAt(me.getPoint()) == fichasJugador.get(i)) {
-            		dragLabel = (Ficha) clickedPanel.getComponentAt(me.getPoint());
+            	if ((Ficha) clickedPanel.getComponentAt(me.getPoint()) == fichasJugador.get(i)) {
+            		dragFicha = (Ficha) clickedPanel.getComponentAt(me.getPoint());
             		break;
             	}
             }
-            // if we click on jpanel that holds a jlabel
-            if (dragLabel == null)
+            if (dragFicha == null)  // Just in case
             	return;
-            clickedPanel.remove(dragLabel);
+            clickedPanel.remove(dragFicha);
             clickedPanel.revalidate();
             clickedPanel.repaint();
 
-            dragLabelWidthDiv2 = dragLabel.getWidth() / 2;
-            dragLabelHeightDiv2 = dragLabel.getHeight() / 2;
+            dragFichaHCenter = dragFicha.getWidth() / 2;
+            dragFichaVCenter = dragFicha.getHeight() / 2;
 
-            int x = me.getX() - dragLabelWidthDiv2;
-            int y = me.getY() + WINDOW_VSIZE - 110 - dragLabelHeightDiv2;
-            dragLabel.setLocation(x, y);
-            System.out.println(me.getPoint());
-            //me.getXOnScreen()
-            layeredPane.add(dragLabel, JLayeredPane.DRAG_LAYER);
+            x = me.getX() - dragFichaHCenter;
+            y = me.getY() + WINDOW_VSIZE - 110 - dragFichaVCenter;
+            layeredPane.add(dragFicha, JLayeredPane.DRAG_LAYER);
+            dragFicha.setLocation(x, y);
             repaint();
         }
 		
 		@Override
         public void mouseDragged(MouseEvent me) {
-            if (dragLabel == null) {
+            if (dragFicha == null) {
                 return;
             }
-            int x = me.getX() - dragLabelWidthDiv2;
-            int y = me.getY() + WINDOW_VSIZE - 110 - dragLabelHeightDiv2;
-            dragLabel.setLocation(x, y);
+            x = me.getX() - dragFichaHCenter;
+            y = me.getY() + WINDOW_VSIZE - 110 - dragFichaVCenter;
+            dragFicha.setLocation(x, y);
             repaint();
         }
 		
 		@Override
         public void mouseReleased(MouseEvent me) {
-            if (dragLabel == null) {
+            if (dragFicha == null) { // Just in case
                 return;
             }
-            remove(dragLabel); // remove dragLabel for drag layer of JLayeredPane
-            JPanel droppedPanel = null;//(JPanel) jugadorPanel.getComponentAt(me.getPoint());
+            remove(dragFicha); // Quita la ficha del layeredPane
+            JPanel droppedPanel = null;
             if (droppedPanel == null) {
                 // if off the grid, return label to home
-                clickedPanel.add(dragLabel);
+                clickedPanel.add(dragFicha);
                 clickedPanel.revalidate();
             } else {
                 int r = -1;
@@ -420,19 +384,19 @@ public class Domino extends JFrame {
 
                 if (r == -1) {
                     // if off the grid, return label to home
-                    clickedPanel.add(dragLabel);
+                    clickedPanel.add(dragFicha);
                     clickedPanel.revalidate();
                 } else {
-                	clickedPanel.add(dragLabel);
+                	clickedPanel.add(dragFicha);
                     clickedPanel.revalidate();
-                    /*droppedPanel.add(dragLabel);
+                    /*droppedPanel.add(dragFicha);
                     droppedPanel.revalidate();
                     */
                 }
             }
 
             repaint();
-            dragLabel = null;
+            dragFicha = null;
         }
 		
 		

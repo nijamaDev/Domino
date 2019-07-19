@@ -63,7 +63,8 @@ import misComponentes.Titulos;
 public class Domino extends JFrame {
 
 	private static final int WINDOW_HSIZE = 1270;
-	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, 640);
+	private static final int WINDOW_VSIZE = 640;
+	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, WINDOW_VSIZE);
 	private static final Dimension FICHA_VSIZE = new Dimension(50, 100);
 	private static final Dimension FICHA_HSIZE = new Dimension(100, 50);
 	private Escuchas escucha;
@@ -116,8 +117,8 @@ public class Domino extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// define window container and layout
 		layeredPane = new JLayeredPane();
-		//layeredPane.addMouseListener(escucha);
-		//layeredPane.addMouseMotionListener(escucha);
+		layeredPane.addMouseListener(escucha);
+		layeredPane.addMouseMotionListener(escucha);
 		layeredPane.setPreferredSize(WINDOW_SIZE);
 		allPanel = new JPanel(new BorderLayout());
 		allPanel.setPreferredSize(WINDOW_SIZE);
@@ -135,8 +136,8 @@ public class Domino extends JFrame {
 		
 		// crear el escucha
 		escucha = new Escuchas();
-		addMouseListener(escucha);
-		addMouseMotionListener(escucha);
+		//addMouseListener(escucha);
+		//addMouseMotionListener(escucha);
 		// crear la GUI
 		//this.getContentPane().setPreferredSize(new Dimension(1270, 640));
 		//this.getContentPane().setBackground(Color.black);
@@ -258,6 +259,9 @@ public class Domino extends JFrame {
 		jugadorPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		jugadorPanel.setPreferredSize(new Dimension(1200, 110));
 		jugadorPanel.setBackground(Color.black);
+		jugadorPanel.addMouseListener(escucha);
+		jugadorPanel.addMouseMotionListener(escucha);
+				
 		
 		texto = new JTextArea();
 		texto.setForeground(Color.white);
@@ -267,7 +271,7 @@ public class Domino extends JFrame {
 		texto.setPreferredSize(new Dimension(100, 100));
 		//printDinero();
 		
-		//jugadorPanel.add(texto);
+		jugadorPanel.add(texto);
 		
 		allPanel.add(jugadorPanel, BorderLayout.PAGE_END);
 		
@@ -307,8 +311,8 @@ public class Domino extends JFrame {
 			JPanel fichaPanel = new JPanel();
 			fichaPanel.setPreferredSize(FICHA_VSIZE);
 			Ficha ficha = list.get(i);
-			//control.getFichasJugador().get(0).addMouseListener(escucha);
-			//control.getFichasJugador().get(0).addMouseMotionListener(escucha);
+			//control.getFichasJugador().get(i).addMouseListener(escucha);
+			//control.getFichasJugador().get(i).addMouseMotionListener(escucha);
 			//fichaPanel.add(ficha);
 			//jugadorPanel.add(fichaPanel);
 			jugadorPanel.add(ficha);
@@ -321,7 +325,6 @@ public class Domino extends JFrame {
 			pilaPanel.add(list.get(i));
 		revalidate();
 		repaint();
-			
 		
 	}
 	
@@ -357,8 +360,8 @@ public class Domino extends JFrame {
             if (fichasJugador.size() < 1)
             	return;
             for (int i=0; i < fichasJugador.size(); i++) {
-            	if (clickedPanel.getComponentAt(me.getPoint()) == fichasJugador.get(i)) {
-            		dragLabel = (JLabel) me.getComponent();
+            	if ((JLabel) clickedPanel.getComponentAt(me.getPoint()) == fichasJugador.get(i)) {
+            		dragLabel = (Ficha) clickedPanel.getComponentAt(me.getPoint());
             		break;
             	}
             }
@@ -372,10 +375,11 @@ public class Domino extends JFrame {
             dragLabelWidthDiv2 = dragLabel.getWidth() / 2;
             dragLabelHeightDiv2 = dragLabel.getHeight() / 2;
 
-            int x = me.getPoint().x + dragLabelWidthDiv2;
-            int y = me.getPoint().y + dragLabelHeightDiv2;
+            int x = me.getX() - dragLabelWidthDiv2;
+            int y = me.getY() + WINDOW_VSIZE - 110 - dragLabelHeightDiv2;
             dragLabel.setLocation(x, y);
             System.out.println(me.getPoint());
+            //me.getXOnScreen()
             layeredPane.add(dragLabel, JLayeredPane.DRAG_LAYER);
             repaint();
         }
@@ -385,12 +389,10 @@ public class Domino extends JFrame {
             if (dragLabel == null) {
                 return;
             }
-            int x = me.getPoint().x - dragLabelWidthDiv2;
-            int y = me.getPoint().y - dragLabelHeightDiv2;
-            System.out.println(me.getPoint());
+            int x = me.getX() - dragLabelWidthDiv2;
+            int y = me.getY() + WINDOW_VSIZE - 110 - dragLabelHeightDiv2;
             dragLabel.setLocation(x, y);
             repaint();
-            //System.out.println("mouse dragged");
         }
 		
 		@Override

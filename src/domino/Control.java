@@ -60,7 +60,7 @@ public class Control {
 	public void nuevaRonda(boolean inicia) {
 		pila.clear();
 		for(int i=0; i<fichas.size(); i++)
-			fichas.get(i).voltearFicha();
+			fichas.get(i).taparFicha();
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
@@ -108,4 +108,9 @@ public class Control {
 	public ArrayList<Ficha> getPila() {
 		return pila;
 	}
+	
+	public ArrayList<Ficha> getFichasTablero() {
+		return fichasTablero;
+	}
+	
 }

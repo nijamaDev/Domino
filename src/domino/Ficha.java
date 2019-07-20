@@ -17,28 +17,21 @@ package domino;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import codigoExterno.RotatedIcon;
+import codigoExterno.RotatedIcon.Rotate;
+
 /**
  * 
  */
 public class Ficha extends JLabel {
+	public static final int ROTAR_0 = 0, ROTAR_IZQ = 1, ROTAR_DER = 2, ROTAR_ABAJO = 3;
 	public static ImageIcon back;
 	private ImageIcon front;
 	private RotatedIcon rotateIcon;
-	
 	private int vIzq, vDer;
 	
 	public Ficha() {}
 	
-	public Ficha(Ficha newFicha) {
-		front = newFicha.front;
-	}
-	
-	
-
-	public Ficha(ImageIcon image) {
-		this.front = image;
-		setIcon(back);
-	}
 	public Ficha(ImageIcon image, int vIzq, int vDer) {
 		this.front = image;
 		setIcon(back);
@@ -46,12 +39,42 @@ public class Ficha extends JLabel {
 		this.vDer = vDer;
 	}
 	
-	public void girarFicha() {
-		rotateIcon = new RotatedIcon(front);
-		setIcon(rotateIcon);
+	public Ficha(Ficha newFicha) {
+		front = newFicha.front;
+		vIzq = newFicha.getvIzq();
+		vDer = newFicha.getvDer();
+		setIcon(newFicha.getIcon());
 	}
 	
-	public void voltearFicha() {
+	/*
+	public Ficha(ImageIcon image) {
+		this.front = image;
+		setIcon(back);
+	}
+	*/
+	
+	public void girarFicha(int rotar) {
+		switch (rotar) {
+		case 0: //vertical, original
+			setIcon(front);
+			break;
+		case 1: // horizontal a la izquierda
+			rotateIcon = new RotatedIcon(front, Rotate.UP);
+			setIcon(rotateIcon);
+			break;
+		case 2: // horizontal a la derecha
+			rotateIcon = new RotatedIcon(front, Rotate.DOWN);
+			setIcon(rotateIcon);
+			break;
+		case 3: // vertical, al revés
+			rotateIcon = new RotatedIcon(front, Rotate.UPSIDE_DOWN);
+			setIcon(rotateIcon);
+			break;
+		}
+		
+	}
+	
+	public void taparFicha() {
 		setIcon(back);
 	}
 	

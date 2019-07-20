@@ -39,7 +39,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import misComponentes.Titulos;
+import codigoExterno.Titulos;
 
 /**
  * 
@@ -128,7 +128,6 @@ public class Domino extends JFrame {
 		c.gridy = 0;
 		c.weightx = 0.01;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		
 		tituloPanel.add(nuevo, c);
 		
 		// Titulo
@@ -174,20 +173,7 @@ public class Domino extends JFrame {
 		
 		oponentPanel.add(oponente);
 		
-		/*
-		back = control.getBackFicha();
-		back.setPreferredSize(new Dimension(50, 100));
-		
-		//Funcion para girar imagen
-		AffineTransform tx = AffineTransform.getRotateInstance(Math.PI/2,
-	            back.getWidth()/2, back.getHeight()/2);
-		
-		
-		oponentPanel.add(back);
-		*/
-		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
-		
 		
 		// Panel del tablero
 		Image imagen;
@@ -232,7 +218,6 @@ public class Domino extends JFrame {
 			tablero.add(panel, c);
 		}
 		
-		tablero.repaint();
 		
 		zonaJuego.add(tablero, BorderLayout.PAGE_END);
 		
@@ -271,8 +256,9 @@ public class Domino extends JFrame {
 		allPanel.add(pilaPanel, BorderLayout.LINE_END);
 		
 		layeredPane.setBackground(Color.black);
-		//layeredPane.add(allPanel, JLayeredPane.DEFAULT_LAYER);
-		//add(allPanel, JLayeredPane.DEFAULT_LAYER);
+		
+		revalidate();
+		repaint();
 	}
 	
 	private void printDinero() { // Muestra el dinero y la apuesta actual
@@ -316,8 +302,14 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
-	private void colocarFicha() {
+	private void colocarFicha(Ficha dragFicha) { // Coloca la ficha en el tablero
+		int vIzq = dragFicha.getvIzq();
+		int vDer = dragFicha.getvDer();
+		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
 		
+		c.gridwidth = 3;
+    	dragFicha.girarFicha(Ficha.ROTAR_IZQ);
+    	dragFicha.setPreferredSize(FICHA_H);
 	}
 	
 	private boolean escogerInicio() { // Escoge quién inicia la partida
@@ -397,48 +389,18 @@ public class Domino extends JFrame {
                 clickedPanel.add(dragFicha);
                 clickedPanel.revalidate();
             } else {
-            	
+            	colocarFicha(dragFicha);
             	c.gridx += 3;
             	c.gridy = 1;
             	c.gridwidth = 3;
-            	dragFicha.girarFicha();
+            	dragFicha.girarFicha(Ficha.ROTAR_IZQ);
             	dragFicha.setPreferredSize(FICHA_H);
             	droppedPanel.add(dragFicha, c);
-            	dragFicha = null;
             	revalidate();
-            	repaint();
-            	return;
-            	/*
-                int r = -1;
-                int c = -1;
-                /*
-                searchTablero: for (int row = 0; row < panelGrid.length; row++) {
-                    for (int col = 0; col < panelGrid[row].length; col++) {
-                        if (panelGrid[row][col] == droppedPanel) {
-                            r = row;
-                            break searchTablero;
-                        }
-                    }
-                } 
-
-                if (r == -1) {
-                    // if off the grid, return label to home
-                    clickedPanel.add(dragFicha);
-                    clickedPanel.revalidate();
-                } else {
-                	clickedPanel.add(dragFicha);
-                    clickedPanel.revalidate();
-                    /*droppedPanel.add(dragFicha);
-                    droppedPanel.revalidate();
-                    
-                }*/
             }
-
             repaint();
             dragFicha = null;
         }
-		
-		
 	}
 }
 

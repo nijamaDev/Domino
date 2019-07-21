@@ -122,6 +122,10 @@ public class Control {
 		return pila;
 	}
 	
+	public ArrayList<Ficha> getFichasTablero() {
+		return fichasTablero;
+	}
+	
 	public ArrayList<Ficha> getFichas() {
 		return fichas;
 	}

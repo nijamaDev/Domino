@@ -94,9 +94,9 @@ public class Domino extends JFrame {
 	public void nuevaRonda() {
 		control.nuevaRonda(escogerInicio());
 		c = new GridBagConstraints();
-		xIzq = 6;
+		xIzq = 1;
 		yIzq = 8;
-		xDer = 6;
+		xDer = 1;
 		yDer = 8;
 		esquinaIzq = false;
 		esquinaDer = false;
@@ -194,7 +194,7 @@ public class Domino extends JFrame {
 			e.printStackTrace();
 		}
 		tableroPanel.setLayout(new GridBagLayout());
-		tableroPanel.setPreferredSize(new Dimension(1150, 480));
+		tableroPanel.setPreferredSize(new Dimension(1160, 481));
 		
 		
 		
@@ -203,14 +203,14 @@ public class Domino extends JFrame {
 		Dimension VPanelDimension = new Dimension(1, 25);
 		c = new GridBagConstraints();
 		c.gridy = 0;
-		for (int col=1; col<=45; col++) {
+		for (int col=1; col<=46; col++) {
 			JPanel panel = new JPanel();
 			panel.setPreferredSize(HPanelDimension);
 			c.gridx = col;
 			tableroPanel.add(panel, c);
 		}
 		c.gridx = 0;
-		for (int row=1; row<=18; row++) {
+		for (int row=1; row<=19; row++) {
 			JPanel panel = new JPanel();
 			panel.setPreferredSize(VPanelDimension);
 			c.gridy = row;
@@ -358,7 +358,7 @@ public class Domino extends JFrame {
 			// ¿La ficha se puede colocar en la izquierda?
 			boolean esquina = false;
 			int porMenos = 1;
-			if (xIzq < 4 && !esquinaIzq) {
+			if (xIzq < 1) {
 				if (fichasTablero.get(0).getvIzq() == fichasTablero.get(0).getvDer())
 					yIzq += 1;
 				yIzq += 2;
@@ -370,17 +370,21 @@ public class Domino extends JFrame {
 			if (esquinaIzq)
 				porMenos = -1;
 			if (dragFicha.getvIzq() == dragFicha.getvDer()) { // ¿Es doble cara? Vertical
-				if (!esquina && !esquinaIzq)
-					xIzq += 2;
+				if (!esquina && !esquinaIzq) {
+					xIzq +=  2;
+					yIzq += -1;
+				}
 				c.gridx = xIzq;
-				c.gridy = yIzq -1;
+				c.gridy = yIzq;
+				yIzq += 1;
 				c.gridwidth = 2;
 				c.gridheight = 4;
-				xIzq += -4*porMenos;
+				xIzq += -4;
+				if (esquinaIzq)
+					xIzq += 6;
 				if (esquina && !esquinaIzq) {
-					c.gridy = yIzq;
 					xIzq += 4;
-					yIzq += 5;
+					yIzq += 3;
 					esquinaIzq = true;
 				}
 				fichasTablero.add(0, dragFicha);

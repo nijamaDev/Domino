@@ -114,10 +114,10 @@ public class Domino extends JFrame {
 	public void nuevaRonda() {
 		control.nuevaRonda(escogerInicio());
 		c = new GridBagConstraints();
-		xIzq = 21;
-		yIzq = 8;
-		xDer = 21;
-		yDer = 8;
+		xIzq = 28;
+		yIzq = 12;
+		xDer = 28;
+		yDer = 12;
 		esquinaIzq = false;
 		IzqA1 = false;
 		esquinaDer = false;

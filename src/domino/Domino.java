@@ -16,88 +16,70 @@ package domino;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.Image;
-import java.awt.Graphics;
-import java.awt.MouseInfo;
 import java.awt.Point;
 
-
 import javax.imageio.ImageIO;
-import javax.security.auth.callback.TextOutputCallback;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.TransferHandler;
 
-import misComponentes.Titulos;
+import codigoExterno.Titulos;
 
 /**
  * 
  */
 public class Domino extends JFrame {
-	
+
+	private static final int WINDOW_HSIZE = 1270;
+	private static final int WINDOW_VSIZE = 720;
+	private static final int FICHA_HSIZE = 50;
+	private static final int FICHA_VSIZE = 100;
+	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, WINDOW_VSIZE);
+	private static final Dimension FICHA_V = new Dimension(FICHA_HSIZE, FICHA_VSIZE);
+	private static final Dimension FICHA_H = new Dimension(FICHA_VSIZE, FICHA_HSIZE);
 	private Escuchas escucha;
-	private JButton nuevo, salir;
-	private JPanel tituloPanel, // North // título
-				   zonaJuego,	// Center
-				   oponentPanel,// Center > North // Fichas computador
-				   pilaPanel,	// West //fichas de la pila
-				   jugadorPanel;// center > South          // Fichas Jugador, dinero, apuesta
-	private ImageJPanel tablero;// Center > Center // tablero de juego
-	private Control control;
-	private JTextArea texto;
-	
-	
-	//coordenadas del mouse
-	private int x;
-	private int y;
+	private JButton nuevo, salir, getFicha;
+	private JLayeredPane layeredPane; // necesario para arrastrar las fichas (se colola en this.getContentPane()
+	private JPanel allPanel,    // Panel para agregar los demás paneles
+				   tituloPanel, // North -- contiene el botón nuevo y salir y el título "Dominó"  
+				   zonaJuego,	// Center -- contiene los paneles opponentPanel, tablero y jugadorPanel.
+				   oponentPanel,// Center > North -- Contiene las fichas del computador
+				   pilaPanel,	// West -- contiene las fichas disponibles para comer (pila)
+				   jugadorPanel;// center > South Contiene las Fichas del Jugador y un JTextArea
+	private ImageJPanel tableroPanel;// Center > Center // Contiene las fichas que se colocan durante la partida
+	private Control control;  // Lleva el mecanismo del juego
+	private JTextArea dineroText;  // Contiene el Dinero y la apuesta (visualmente)
+	private GridBagConstraints c = new GridBagConstraints();
+	private int x, y;
 	
 	public Domino() {
 		control = new Control();
+		
 		initGUI();
 
 		// default window configuration
-		this.setUndecorated(true);
+		setUndecorated(true);
 		pack();
-		this.setResizable(false);
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setVisible(true);
 		nuevaPartida();
-		for (int i=0; i<28; i++) {
-			control.getPila().get(i).addMouseListener(escucha);
-		}
-	}
-	
-	public void nuevaRonda() {
-		control.nuevaRonda(escogerInicio());
-		printDinero();
-		printFichas();
 	}
 	
 	public void nuevaPartida() {
@@ -105,17 +87,30 @@ public class Domino extends JFrame {
 		nuevaRonda();
 	}
 	
-	private void initGUI() {
+	public void nuevaRonda() {
+		control.nuevaRonda(escogerInicio());
+		c = new GridBagConstraints();
+		printDinero();
+		printFichas();
+	}
+	
+	private void initGUI() { // crear la GUI
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// define window container and layout
+		layeredPane = new JLayeredPane();
+		layeredPane.setPreferredSize(WINDOW_SIZE);
+		allPanel = new JPanel(new BorderLayout());
 		
-		// crear el escucha
-		escucha = new Escuchas();
-		
-		// crear la GUI
-		this.getContentPane().setPreferredSize(new Dimension(1270, 640));
+		allPanel.setSize(layeredPane.getPreferredSize());
+		allPanel.setLocation(0, 0);
 		this.getContentPane().setBackground(Color.black);
+		layeredPane.add(allPanel, JLayeredPane.DEFAULT_LAYER);
+		add(layeredPane);
+		this.getContentPane().add(layeredPane, BorderLayout.CENTER);
+		c = new GridBagConstraints();
 		
-		GridBagConstraints c = new GridBagConstraints();
+		// crea los escuchas
+		escucha = new Escuchas();
 		
 		//-------------- Panel superior --------------
 		tituloPanel = new JPanel();
@@ -131,17 +126,16 @@ public class Domino extends JFrame {
 		c.gridy = 0;
 		c.weightx = 0.01;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		
 		tituloPanel.add(nuevo, c);
 		
 		// Titulo
 		Titulos titulo = new Titulos("Dominó", 30, Color.black);
-		titulo.addMouseListener(escucha);
+		//titulo.addMouseListener(escucha);
 		
 		c.gridx = 1;
-		c.weightx = 10;
+		c.weightx = 1;
 		c.gridheight = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.CENTER;
 		
 		tituloPanel.add(titulo, c);
@@ -162,7 +156,7 @@ public class Domino extends JFrame {
 		
 		tituloPanel.add(salir, c);
 		
-		this.getContentPane().add(tituloPanel, BorderLayout.PAGE_START);
+		allPanel.add(tituloPanel, BorderLayout.PAGE_START);
 		
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
@@ -177,72 +171,73 @@ public class Domino extends JFrame {
 		
 		oponentPanel.add(oponente);
 		
-		/*
-		back = control.getBackFicha();
-		back.setPreferredSize(new Dimension(50, 100));
-		
-		//Funcion para girar imagen
-		AffineTransform tx = AffineTransform.getRotateInstance(Math.PI/2,
-	            back.getWidth()/2, back.getHeight()/2);
-		
-		
-		oponentPanel.add(back);
-		*/
-		
 		zonaJuego.add(oponentPanel, BorderLayout.PAGE_START);
-		
 		
 		// Panel del tablero
 		Image imagen;
 		try {
 			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))
 								  ).getImage().getScaledInstance(1150, 400, Image.SCALE_SMOOTH);
-			tablero = new ImageJPanel(imagen);
-			tablero.addMouseMotionListener(escucha);
+			tableroPanel = new ImageJPanel(imagen);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		tablero.setLayout(new GridBagLayout());
-		tablero.repaint();
-		tablero.setPreferredSize(new Dimension(1150, 400));
+		tableroPanel.setLayout(new GridBagLayout());
+		tableroPanel.setPreferredSize(new Dimension(1150, 480));
 		
-		
+		Titulos tabl = new Titulos("h", 30, Color.black);
+		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.weightx = 1;
-		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		
-		
-		Titulos tabl = new Titulos("holi ", 30, Color.black);
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridx = 10;
-		c.gridy = 10;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		tablero.add(tabl, c);
+		tableroPanel.add(tabl, c);
 		
-		zonaJuego.add(tablero, BorderLayout.PAGE_END);
+		// Crear la matriz del tablero (GridBagLayout)
+		Dimension HPanelDimension = new Dimension(25, 1);
+		Dimension VPanelDimension = new Dimension(1, 25);
+		c = new GridBagConstraints();
+		c.gridy = 0;
+		for (int col=1; col<=44; col++) {
+			JPanel panel = new JPanel();
+			panel.setPreferredSize(HPanelDimension);
+			c.gridx = col;
+			tableroPanel.add(panel, c);
+		}
+		c.gridx = 0;
+		for (int row=1; row<=16; row++) {
+			JPanel panel = new JPanel();
+			panel.setPreferredSize(VPanelDimension);
+			c.gridy = row;
+			tableroPanel.add(panel, c);
+		}
 		
-		this.getContentPane().add(zonaJuego, BorderLayout.CENTER);
+		
+		zonaJuego.add(tableroPanel, BorderLayout.PAGE_END);
+		
+		allPanel.add(zonaJuego, BorderLayout.CENTER);
 		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel();
 		jugadorPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		jugadorPanel.setPreferredSize(new Dimension(1200, 110));
 		jugadorPanel.setBackground(Color.black);
+		jugadorPanel.addMouseListener(escucha);
+		jugadorPanel.addMouseMotionListener(escucha);
+				
 		
-		texto = new JTextArea();
-		texto.setForeground(Color.white);
-		texto.setBackground(Color.black);
-		texto.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
-		texto.setEditable(false);
-		texto.setPreferredSize(new Dimension(100, 100));
+		dineroText = new JTextArea();
+		dineroText.setForeground(Color.white);
+		dineroText.setBackground(Color.black);
+		dineroText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+		dineroText.setEditable(false);
+		dineroText.setPreferredSize(new Dimension(100, 100));
 		//printDinero();
 		
-		jugadorPanel.add(texto);
+		jugadorPanel.add(dineroText);
 		
-		this.getContentPane().add(jugadorPanel, BorderLayout.PAGE_END);
+		allPanel.add(jugadorPanel, BorderLayout.PAGE_END);
 		
 		pilaPanel = new JPanel();
 		pilaPanel.setLayout(new FlowLayout());
@@ -253,153 +248,183 @@ public class Domino extends JFrame {
 		
 		pilaPanel.add(tituloPila);
 		
-		this.getContentPane().add(pilaPanel, BorderLayout.LINE_END);
-	}
-	
-	private void printDinero() { // Muestra el dinero y la apuesta actual
-		texto.setText(
-				"Dinero:\n"+ control.getDinero() + "\n" +
-				"Apuesta:\n" + control.getApuesta());
-	}
-	
-	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
-		ArrayList<Ficha> list;
-		list = control.getFichasOponente();
-		int numFichas = list.size();
-		for (int i=0; i<numFichas; i++)
-			oponentPanel.add(list.get(i));
+		allPanel.add(pilaPanel, BorderLayout.LINE_END);
 		
-		list = control.getFichasJugador();
-		numFichas = list.size();
-		for (int i=0; i<numFichas; i++)
-			jugadorPanel.add(list.get(i));
+		layeredPane.setBackground(Color.black);
 		
-		list = control.getPila();
-		numFichas = list.size();
-		for (int i=0; i<numFichas; i++)
-			pilaPanel.add(list.get(i));
-			
-		
+		revalidate();
+		repaint();
 	}
 	
 	private boolean escogerInicio() { // Escoge quién inicia la partida
 		return false; //place holder
 	}
 	
-	private class Escuchas extends MouseAdapter implements ActionListener{
-		private JLabel dragLabel = null;
-        private int dragLabelWidthDiv2;
-        private int dragLabelHeightDiv2;
-        private JPanel clickedPanel = null;
-        private JPanel destino;
-        private boolean cambiar;
-        private JLabel origen;
-
-		@Override
+	private void printDinero() { // Muestra el dinero y la apuesta actual
+		dineroText.setText(
+				"Dinero:\n"+ control.getDinero() + "\n" +
+				"Apuesta:\n" + control.getApuesta());
+	}
+	
+	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
+		ArrayList<Ficha> list;
+		Ficha ficha;
+		int numFichas;
+		// Mostrar fichas del Oponente
+		list = control.getFichasOponente();
+		numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+		{
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
+			oponentPanel.add(ficha);
+		}
+		// Mostrar fichas del Jugador
+		list = control.getFichasJugador();
+		numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+		{
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
+			jugadorPanel.add(ficha);
+		}
+		// Mostrar fichas de la pila de fichas restantes
+		list = control.getPila();
+		numFichas = list.size();
+		for (int i=0; i<numFichas; i++)
+		{
+			ficha = list.get(i);
+			ficha.setPreferredSize(FICHA_V);
+			pilaPanel.add(ficha);
+		}
+		revalidate();
+		repaint();
+	}
+	
+	private boolean colocarFicha(Ficha dragFicha) { // Coloca la ficha en el tablero
+		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
+		int tableroSize = fichasTablero.size(),
+			vIzqTablero,
+			vDerTablero,
+			vIzq = dragFicha.getvIzq(), 
+			vDer = dragFicha.getvDer();
+		if (tableroSize == 0) {
+			if (vIzq != vDer) {
+				c.gridx = 21;
+				c.gridy = 7;
+				c.gridwidth = 4;
+				c.gridheight = 2;
+				dragFicha.girarFicha(Ficha.ROTAR_IZQ);
+        		dragFicha.setPreferredSize(FICHA_H);
+			} else {
+				c.gridx = 22;
+				c.gridy = 6;
+				c.gridwidth = 2;
+				c.gridheight = 4;
+			}
+			fichasTablero.add(dragFicha);
+			return true;
+		}
+		vIzqTablero = fichasTablero.get(0).getvIzq();
+		vDerTablero = fichasTablero.get(tableroSize-1).getvDer();
+		
+    	return false;
+	}
+	
+	private void ganar() {
+		if (control.getFichasJugador().size() == 0) {
+			// Jugador gana
+		}
+		if (control.getFichasOponente().size() == 0) {
+			// Jugador pierde
+		}
+	}
+	
+	private  class Escuchas extends MouseAdapter implements ActionListener{
+		private  Ficha dragFicha = null;
+		private  int mX, mY, dragFichaHCenter, dragFichaVCenter;
+		private  JPanel clickedPanel = null;
+		
+        @Override
 		public void actionPerformed(ActionEvent eventAction) {
-			// TODO Auto-generated method stub
-			// responde a los botones nuevo y salir
+			// responde a los botones
 			if (eventAction.getSource() == salir) {
 				System.exit(0);
 			} else if (eventAction.getSource() == nuevo) {
 				nuevaPartida();
-			} else {
-				// llamar a la funcion ???
-				
+			} else if (eventAction.getSource() == getFicha) {
+				//getFicha();
 			}
 		}
 		
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			if(cambiar==true) {
-				destino = (JPanel)e.getSource();
-				destino.add(origen);
-				//origen.setIcon(icon);
-				cambiar=false;
-			}
-		}
+        public void mousePressed(MouseEvent me) {
+			clickedPanel = jugadorPanel;
+            if (!(clickedPanel.getComponentAt(me.getPoint()) instanceof Ficha)) {
+            	return; // Sino es una Ficha lo que se clickeo, se cancela.
+            }
+            ArrayList<Ficha> fichasJugador = control.getFichasJugador();
+            // Busca cuál de las fichas del jugador fue la que se clickeo.
+            for (int i=0; i < fichasJugador.size(); i++) {
+            	if ((Ficha) clickedPanel.getComponentAt(me.getPoint()) == fichasJugador.get(i)) {
+            		dragFicha = (Ficha) clickedPanel.getComponentAt(me.getPoint());
+            		break;
+            	}
+            }
+            if (dragFicha == null)  // Just in case
+            	return;
+            clickedPanel.remove(dragFicha);
+            clickedPanel.revalidate();
+            clickedPanel.repaint();
 
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+            dragFichaHCenter = dragFicha.getWidth() / 2;
+            dragFichaVCenter = dragFicha.getHeight() / 2;
 
-		@Override
-		/*public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			if(cambiar==false) {
-				origen = (JLabel)e.getSource();
-				cambiar=true;
-			}
-		}*/
-		public void mousePressed(MouseEvent e) {
-		      JComponent c = (JComponent) e.getSource();
-		      TransferHandler handler = c.getTransferHandler();
-		      handler.exportAsDrag(c, e, TransferHandler.COPY);
-		    }
+            mX = me.getX() - dragFichaHCenter;
+            mY = me.getY() + WINDOW_VSIZE - 110 - dragFichaVCenter;
+            layeredPane.add(dragFicha, JLayeredPane.DRAG_LAYER);
+            dragFicha.setLocation(mX, mY);
+            repaint();
+        }
 		
+		@Override
+        public void mouseDragged(MouseEvent me) {
+            if (dragFicha == null) {
+                return;
+            }
+            mX = me.getX() - dragFichaHCenter;
+            mY = me.getY() + WINDOW_VSIZE - 110 - dragFichaVCenter;
+            dragFicha.setLocation(mX, mY);
+            repaint();
+        }
+		
+		@Override
+        public void mouseReleased(MouseEvent me) {
+			//System.out.println("MouseReleased");
+            if (dragFicha == null) { // Just in case
+                return;
+            }
+            remove(dragFicha); // Quita la ficha del layeredPane
+            Point p = new Point(mX, mY);
+            JPanel droppedPanel = (JPanel) zonaJuego.getComponentAt(p);
+            if (droppedPanel != tableroPanel) {
+                // Si la ficha no se coloca en el tablero, la devuelve al jugador
+                clickedPanel.add(dragFicha);
+                clickedPanel.revalidate();
+            } else {
+            	if(colocarFicha(dragFicha)) { // Si la ficha puede colocarse se coloca
+            		droppedPanel.add(dragFicha, c);
+            	} else { // Si no se puede colocar, se devuelve
+            		clickedPanel.add(dragFicha);
+            	}
+            	revalidate();
+            }
+            repaint();
+            dragFicha = null;
+        }
 	}
-	/*
-	private class MoveMouseListener implements MouseListener, MouseMotionListener {
-		JComponent target;
-		Point start_drag;
-		Point start_loc;
-
-		public MoveMouseListener(JComponent target) {
-			this.target = target;
-		}
-
-		public JFrame getFrame(Container target) {
-			if (target instanceof JFrame) {
-			return (JFrame) target;
-			}
-			
-			return getFrame(target.getParent());
-		}
-
-		Point getScreenLocation(MouseEvent e) {
-			Point cursor = e.getPoint();
-			Point target_location = this.target.getLocationOnScreen();
-			return new Point((int) (target_location.getX() + cursor.getX()),
-			(int) (target_location.getY() + cursor.getY()));
-		}
-
-		public void mouseClicked(MouseEvent e) {
-		}
-
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		public void mouseExited(MouseEvent e) {
-		}
-
-		public void mousePressed(MouseEvent e) {
-			this.start_drag = this.getScreenLocation(e);
-			this.start_loc = this.getFrame(this.target).getLocation();
-		}
-
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			Point current = this.getScreenLocation(e);
-			Point offset = new Point((int) current.getX() - (int) start_drag.getX(),
-			(int) current.getY() - (int) start_drag.getY());
-			JFrame frame = this.getFrame(target);
-			Point new_location = new Point(
-			(int) (this.start_loc.getX() + offset.getX()), (int) (this.start_loc
-			.getY() + offset.getY()));
-			frame.setLocation(new_location);
-		}
-
-		public void mouseMoved(MouseEvent e) {
-		}
-
-	}*/
-
-	
-	
 }
+
+
+
 

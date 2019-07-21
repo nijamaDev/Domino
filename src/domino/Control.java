@@ -30,14 +30,16 @@ import javax.swing.JOptionPane;
 public class Control {
 	private ImageIcon fichaIcon = null;
 	private String imageRoute = "src/imagenes/";
-	private ArrayList<Ficha> fichas = new ArrayList<Ficha>(28);
-	private ArrayList<Ficha> pila = new ArrayList<Ficha>();
+	private ArrayList<Ficha> fichas, pila, fichasTablero;
 	private Jugador jugador;
 	private Oponente oponente;
 	private Cartera cartera;
 	private int apuesta;
 	
 	public Control() {
+		fichas = new ArrayList<Ficha>(28); // Contiene todas las fichas
+		pila = new ArrayList<Ficha>(); // Cada ronda se agregan todas las fichas, se revuelven y se reparten
+		fichasTablero = new ArrayList<Ficha>(); // Fichas colocadas en el tablero
 		try {
 			Ficha.back = new ImageIcon(ImageIO.read(new File("src/imagenes/back-vertical.png")));//.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
 			
@@ -56,7 +58,10 @@ public class Control {
 	}
 	
 	public void nuevaRonda(boolean inicia) {
+		fichasTablero.clear();
 		pila.clear();
+		for(int i=0; i<fichas.size(); i++)
+			fichas.get(i).taparFicha();
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
@@ -64,6 +69,7 @@ public class Control {
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
 			pila.remove(0);
+			//pila.get(0).voltearFicha();
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}
@@ -103,4 +109,9 @@ public class Control {
 	public ArrayList<Ficha> getPila() {
 		return pila;
 	}
+	
+	public ArrayList<Ficha> getFichasTablero() {
+		return fichasTablero;
+	}
+	
 }

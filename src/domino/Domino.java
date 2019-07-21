@@ -46,13 +46,31 @@ import codigoExterno.Titulos;
  */
 public class Domino extends JFrame {
 
-	private static final int WINDOW_HSIZE = 1270;
-	private static final int WINDOW_VSIZE = 720;
-	private static final int FICHA_HSIZE = 40;
-	private static final int FICHA_VSIZE = 80;
-	private static final Dimension WINDOW_SIZE = new Dimension(WINDOW_HSIZE, WINDOW_VSIZE);
-	private static final Dimension FICHA_V = new Dimension(FICHA_HSIZE, FICHA_VSIZE);
-	private static final Dimension FICHA_H = new Dimension(FICHA_VSIZE, FICHA_HSIZE);
+	private static final int 
+		WINDOW_HSIZE   = 1270, WINDOW_VSIZE   = 720,
+							   TITULOP_VSIZE  =  30,
+							   OPONENTP_VSIZE =  80,
+		TABLEROP_HSIZE = 1161, TABLEROP_VSIZE = 621,
+		ZONAJUEGO_VSIZE = TABLEROP_VSIZE+OPONENTP_VSIZE,
+		PILABACKP_HSIZE = WINDOW_HSIZE - TABLEROP_HSIZE,
+		PILABUTP_VSIZE = 35,
+		PILAP_VSIZE = ZONAJUEGO_VSIZE - PILABUTP_VSIZE,
+		JUGADORP_VSIZE = WINDOW_VSIZE-TABLEROP_VSIZE,
+		
+		FICHA_HSIZE = 40, FICHA_VSIZE = 80;
+	private static final Dimension 
+		WINDOW_SIZE    = new Dimension(WINDOW_HSIZE,    WINDOW_VSIZE),
+		TITULOP_SIZE   = new Dimension(WINDOW_HSIZE,    TITULOP_VSIZE),
+		OPONENTP_SIZE  = new Dimension(TABLEROP_HSIZE,  OPONENTP_VSIZE),
+		TABLEROP_SIZE  = new Dimension(TABLEROP_HSIZE,  TABLEROP_VSIZE),
+		ZONAJUEGO_SIZE = new Dimension(TABLEROP_HSIZE,  ZONAJUEGO_VSIZE),
+		PILABACKP_SIZE = new Dimension(PILABACKP_HSIZE, ZONAJUEGO_VSIZE),
+		PILABUTP_SIZE  = new Dimension(PILABACKP_HSIZE, PILABUTP_VSIZE),
+		PILAP_SIZE  = new Dimension(PILABACKP_HSIZE, PILAP_VSIZE),
+		JUGADORP_SIZE  = new Dimension(WINDOW_HSIZE, JUGADORP_VSIZE),
+			
+		FICHA_V        = new Dimension(FICHA_HSIZE,     FICHA_VSIZE),
+		FICHA_H        = new Dimension(FICHA_VSIZE,     FICHA_HSIZE);
 	private Escuchas escucha;
 	private JButton nuevo, salir, getFicha;
 	private JLayeredPane layeredPane; // necesario para arrastrar las fichas (se colola en this.getContentPane()
@@ -129,6 +147,7 @@ public class Domino extends JFrame {
 		tituloPanel = new JPanel();
 		tituloPanel.setLayout(new GridBagLayout());
 		tituloPanel.setBackground(Color.black);
+		tituloPanel.setPreferredSize(TITULOP_SIZE);
 		
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
@@ -174,11 +193,12 @@ public class Domino extends JFrame {
 		//-------------- Panel zona de juego --------------
 		zonaJuego = new JPanel();
 		zonaJuego.setBackground(Color.black);
+		zonaJuego.setPreferredSize(ZONAJUEGO_SIZE);
 		
 		// Panel del oponente (computador)
 		oponentPanel = new JPanel();
 		oponentPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-		oponentPanel.setPreferredSize(new Dimension(1150, 100));
+		oponentPanel.setPreferredSize(OPONENTP_SIZE);
 		oponentPanel.setBackground(Color.black);
 		Titulos oponente = new Titulos("Oponente:", 25, Color.black);
 		
@@ -197,7 +217,7 @@ public class Domino extends JFrame {
 			e.printStackTrace();
 		}
 		tableroPanel.setLayout(new GridBagLayout());
-		tableroPanel.setPreferredSize(new Dimension(1161, 481));
+		tableroPanel.setPreferredSize(TABLEROP_SIZE);
 		
 		
 		
@@ -213,7 +233,7 @@ public class Domino extends JFrame {
 			tableroPanel.add(panel, c);
 		}
 		c.gridx = 0;
-		for (int row=1; row<=24; row++) {
+		for (int row=1; row<=31; row++) {
 			JPanel panel = new JPanel();
 			panel.setPreferredSize(VPanelDimension);
 			c.gridy = row;
@@ -227,18 +247,17 @@ public class Domino extends JFrame {
 		
 		//-------------- Panel jugador --------------
 		jugadorPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		jugadorPanel.setPreferredSize(new Dimension(1200, 110));
+		jugadorPanel.setPreferredSize(JUGADORP_SIZE);
 		jugadorPanel.setBackground(Color.black);
 		jugadorPanel.addMouseListener(escucha);
 		jugadorPanel.addMouseMotionListener(escucha);
-				
 		
 		dineroText = new JTextArea();
 		dineroText.setForeground(Color.white);
 		dineroText.setBackground(Color.black);
 		dineroText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
 		dineroText.setEditable(false);
-		dineroText.setPreferredSize(new Dimension(100, 100));
+		dineroText.setPreferredSize(new Dimension(90, 90));
 		//printDinero();
 		
 		jugadorPanel.add(dineroText);
@@ -246,7 +265,7 @@ public class Domino extends JFrame {
 		allPanel.add(jugadorPanel, BorderLayout.PAGE_END);
 		
 		pilaPanel = new JPanel(new FlowLayout());
-		pilaPanel.setPreferredSize(new Dimension(110, 580));
+		pilaPanel.setPreferredSize(PILAP_SIZE);
 		pilaPanel.setBackground(Color.black);
 		
 		Titulos tituloPila = new Titulos("Fichas ", 30, Color.black);
@@ -254,21 +273,21 @@ public class Domino extends JFrame {
 		pilaPanel.add(tituloPila);
 		
 		pilaBackPanel = new JPanel(new BorderLayout());
-		pilaBackPanel.setPreferredSize(new Dimension(110, 615));
+		pilaBackPanel.setPreferredSize(PILABACKP_SIZE);
 		pilaBackPanel.add(pilaPanel, BorderLayout.CENTER);
 		
 		pilaButtonPanel = new JPanel(new BorderLayout());
-		pilaButtonPanel.setPreferredSize(new Dimension(110, 35));
+		pilaButtonPanel.setPreferredSize(PILABUTP_SIZE);
 		pilaButtonPanel.setBackground(Color.black);
 		
 		getFicha = new JButton("Coger Ficha");
 		getFicha.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
 		getFicha.setForeground(Color.white);
 		getFicha.setBackground(Color.cyan.darker().darker().darker());
-		getFicha.setPreferredSize(new Dimension(110,35));
+		getFicha.setPreferredSize(PILABUTP_SIZE);
 		getFicha.addActionListener(escucha);
 		
-		pilaButtonPanel.add(getFicha);
+		pilaButtonPanel.add(getFicha, BorderLayout.CENTER);
 		
 		pilaBackPanel.add(pilaButtonPanel, BorderLayout.PAGE_END);
 		

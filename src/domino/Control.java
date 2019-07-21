@@ -106,6 +106,20 @@ public class Control {
 		
 	}
 	
+	public void cogerFicha(boolean quien) {
+		if (pila.size() < 1)
+			return;
+		if (quien) {
+			pila.get(0).destaparFicha();
+			jugador.addFicha(pila.get(0));
+			pila.remove(0);
+			
+		} else {
+			oponente.addFicha(pila.get(0));
+			pila.remove(0);
+		}
+	}
+	
 	public int getDinero() {
 		return cartera.getDinero();
 	}

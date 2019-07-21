@@ -50,7 +50,7 @@ public class Domino extends JFrame {
 		WINDOW_HSIZE   = 1270, WINDOW_VSIZE   = 720,
 							   TITULOP_VSIZE  =  30,
 							   OPONENTP_VSIZE =  80,
-		TABLEROP_HSIZE = 1161, TABLEROP_VSIZE = 621,
+		TABLEROP_HSIZE = 1160, TABLEROP_VSIZE = 620,
 		ZONAJUEGO_VSIZE = TABLEROP_VSIZE+OPONENTP_VSIZE,
 		PILABACKP_HSIZE = WINDOW_HSIZE - TABLEROP_HSIZE,
 		PILABUTP_VSIZE = 35,
@@ -219,11 +219,9 @@ public class Domino extends JFrame {
 		tableroPanel.setLayout(new GridBagLayout());
 		tableroPanel.setPreferredSize(TABLEROP_SIZE);
 		
-		
-		
 		// Crear la matriz del tablero (GridBagLayout)
-		Dimension HPanelDimension = new Dimension(20, 1);
-		Dimension VPanelDimension = new Dimension(1, 20);
+		Dimension HPanelDimension = new Dimension(20, 0);
+		Dimension VPanelDimension = new Dimension(0, 20);
 		c = new GridBagConstraints();
 		c.gridy = 0;
 		for (int col=1; col<=58; col++) {
@@ -500,17 +498,19 @@ public class Domino extends JFrame {
 			// ¿La ficha se puede colocar en la derecha?
 			boolean esquina = false;
 			int porMenos = 1;
-			if (xDer > 45-4) {
-				if (fichasTablero.get(tableroSize-1).getvIzq() == fichasTablero.get(tableroSize-1).getvDer())
+			if (xDer > 58-4) {
+				if (fichasTablero.get(tableroSize-1).getvIzq()
+					==
+					fichasTablero.get(tableroSize-1).getvDer())
 					// La ficha anterior era doble cara?
-					yIzq += 1;
-				yIzq += 2;
-				xIzq += 4;
+					yDer += -1;
+				yDer += -4;
+				xDer += -2;
 				c.gridwidth = 2;
 				c.gridheight = 4;
 				esquina = true;
 			}
-			if (esquinaIzq)
+			if (esquinaDer)
 				porMenos = -1;
 			//  -------------- FICHA CON IZQ == DER ----------------
 			if (dragFicha.getvIzq() == dragFicha.getvDer()) { // ¿Es doble cara? Vertical
@@ -532,53 +532,54 @@ public class Domino extends JFrame {
 				}
 				fichasTablero.add(dragFicha);
 				return true;
+				
 				// FICHA LADO IZQUIERDO == TABLERO LADO DERECHO
 			} else if (dragFicha.getvIzq() == vDerTablero) { 
 				// El lado derecho de la ficha coincide con el izquierdo del tablero?
 				dragFicha.girarFicha(Ficha.ROTAR_IZQ*porMenos); // gira la ficha hacia la izquierda
 				dragFicha.setPreferredSize(FICHA_H);
-				c.gridx = xIzq;
-				c.gridy = yIzq;
+				c.gridx = xDer;
+				c.gridy = yDer;
 				c.gridwidth = 4;
 				c.gridheight = 2;
-				xIzq += -4*porMenos;
-				if (esquinaIzq) {
+				xDer += 4*porMenos;
+				if (esquinaDer) {
 					dragFicha.cambiarVal();
 				}
-				if (esquina && !esquinaIzq) {
-					xIzq += 4;
-					yIzq += 4;
+				if (esquina && !esquinaDer) {
+					xDer += -4;
+					yDer += -4;
 					c.gridwidth = 2;
 					c.gridheight = 4;
 					dragFicha.girarFicha(Ficha.ROTAR_ABAJO);
 					dragFicha.setPreferredSize(FICHA_V);
 					dragFicha.cambiarVal();
-					esquinaIzq = true;
+					esquinaDer = true;
 				}
 
 				fichasTablero.add(dragFicha);
 				return true;
-				// FICHA LADO IZQUIERDO == TABLERO LADO IZQUIERDO (ELSE)
-			} else { // el lado izquierdo entonces coincide con el izquierdo del tablero.
-				c.gridx = xIzq;
-				c.gridy = yIzq;
+				// FICHA LADO DERECHO == TABLERO LADO DERECHO (ELSE)
+			} else { // el lado derecho entonces coincide con el derecho del tablero.
+				c.gridx = xDer;
+				c.gridy = yDer;
 				c.gridwidth = 4;
 				c.gridheight = 2;
-				xIzq += -4*porMenos;
+				xDer += 4*porMenos;
 				dragFicha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
 				dragFicha.setPreferredSize(FICHA_H);
-				if (esquinaIzq) {
+				if (esquinaDer) {
 					dragFicha.cambiarVal();
 				}
-				if (esquina && !esquinaIzq) {
-					xIzq += 4;
-					yIzq += 4;
+				if (esquina && !esquinaDer) {
+					xDer += -4;
+					yDer += -4;
 					c.gridwidth = 2;
 					c.gridheight = 4;
 					dragFicha.girarFicha(Ficha.ROTAR_0);
 					dragFicha.setPreferredSize(FICHA_V);
 					dragFicha.cambiarVal();
-					esquinaIzq = true;
+					esquinaDer = true;
 				}
 
 				fichasTablero.add(dragFicha);

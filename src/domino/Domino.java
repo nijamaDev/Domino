@@ -61,8 +61,9 @@ public class Domino extends JFrame {
 				   zonaJuego,	// Center -- contiene los paneles opponentPanel, tablero y jugadorPanel.
 				   oponentPanel,// Center > North -- Contiene las fichas del computador
 				   pilaPanel,	// West -- contiene las fichas disponibles para comer (pila)
-				   jugadorPanel,// center > South Contiene las Fichas del Jugador y un JTextArea
-				   inicioPanel; // Aquí se muestran las fichas para escoger quien inicia
+				   jugadorPanel;// center > South Contiene las Fichas del Jugador y un JTextArea
+	private JPanel inicioPanel; // Aquí se muestran las fichas para escoger quien inicia
+				  
 	
 	private ImageJPanel tableroPanel;// Center > Center // Contiene las fichas que se colocan durante la partida
 	private Control control;  // Lleva el mecanismo del juego
@@ -73,7 +74,6 @@ public class Domino extends JFrame {
 	
 	public Domino() {
 		control = new Control();
-		
 		initGUI();
 
 		// default window configuration
@@ -262,8 +262,14 @@ public class Domino extends JFrame {
 	private boolean escogerInicio() { // Escoge quién inicia la partida
 		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
 		ArrayList<Ficha> fichas = control.getFichas();
+		inicioPanel = (JPanel) this.getGlassPane();
+		inicioPanel.setOpaque(true);
 		inicioPanel.setPreferredSize(WINDOW_SIZE);
-		layeredPane.add(inicioPanel, JLayeredPane.MODAL_LAYER);
+		inicioPanel.setBackground(Color.black);
+		inicioPanel.setVisible(true);
+		
+		revalidate();
+		repaint();
 		
 		return false; //place holder
 	}

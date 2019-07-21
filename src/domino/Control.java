@@ -58,6 +58,7 @@ public class Control {
 	}
 	
 	public void nuevaRonda(boolean inicia) {
+		fichasTablero.clear();
 		pila.clear();
 		for(int i=0; i<fichas.size(); i++)
 			fichas.get(i).taparFicha();

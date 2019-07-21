@@ -61,12 +61,15 @@ public class Domino extends JFrame {
 				   zonaJuego,	// Center -- contiene los paneles opponentPanel, tablero y jugadorPanel.
 				   oponentPanel,// Center > North -- Contiene las fichas del computador
 				   pilaPanel,	// West -- contiene las fichas disponibles para comer (pila)
-				   jugadorPanel;// center > South Contiene las Fichas del Jugador y un JTextArea
+				   jugadorPanel,// center > South Contiene las Fichas del Jugador y un JTextArea
+				   inicioPanel; // Aquí se muestran las fichas para escoger quien inicia
+	
 	private ImageJPanel tableroPanel;// Center > Center // Contiene las fichas que se colocan durante la partida
 	private Control control;  // Lleva el mecanismo del juego
 	private JTextArea dineroText;  // Contiene el Dinero y la apuesta (visualmente)
 	private GridBagConstraints c = new GridBagConstraints();
-	private int x, y;
+	private int xIzq = 21, yIzq = 7,
+				xDer = 21, yDer = 7;
 	
 	public Domino() {
 		control = new Control();
@@ -257,6 +260,11 @@ public class Domino extends JFrame {
 	}
 	
 	private boolean escogerInicio() { // Escoge quién inicia la partida
+		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
+		ArrayList<Ficha> fichas = control.getFichas();
+		inicioPanel.setPreferredSize(WINDOW_SIZE);
+		layeredPane.add(inicioPanel, JLayeredPane.MODAL_LAYER);
+		
 		return false; //place holder
 	}
 	
@@ -308,12 +316,14 @@ public class Domino extends JFrame {
 			vDerTablero,
 			vIzq = dragFicha.getvIzq(), 
 			vDer = dragFicha.getvDer();
-		if (tableroSize == 0) {
+		if (tableroSize == 0) { // Primera ficha, puede ser cualquier ficha
 			if (vIzq != vDer) {
-				c.gridx = 21;
-				c.gridy = 7;
+				c.gridx = xIzq;
+				c.gridy = yIzq;
 				c.gridwidth = 4;
 				c.gridheight = 2;
+				xIzq += -4;
+				xDer += 4;
 				dragFicha.girarFicha(Ficha.ROTAR_IZQ);
         		dragFicha.setPreferredSize(FICHA_H);
 			} else {
@@ -328,16 +338,23 @@ public class Domino extends JFrame {
 		vIzqTablero = fichasTablero.get(0).getvIzq();
 		vDerTablero = fichasTablero.get(tableroSize-1).getvDer();
 		
+		
     	return false;
 	}
 	
-	private void ganar() {
-		if (control.getFichasJugador().size() == 0) {
-			// Jugador gana
+	private void ganar(int ganador) {
+		switch (ganador) {
+		case -1:
+			//el juego sigue, nadie ha ganado
+			return;
+		case 0:
+			//perdedor (ganó la máquina)
+			break;
+		case 1:
+			//ganador
+			break;
 		}
-		if (control.getFichasOponente().size() == 0) {
-			// Jugador pierde
-		}
+		
 	}
 	
 	private  class Escuchas extends MouseAdapter implements ActionListener{

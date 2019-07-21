@@ -90,6 +90,18 @@ public class Control {
 		oponente = new Oponente();
 	}
 	
+	private int ganar() {
+		if (jugador.getFichasJugador().size() == 0) {
+			return 1;
+		}
+		else if (oponente.getFichasJugador().size() == 0) {
+			return 0;
+		} else {
+			return -1;
+		}
+		
+	}
+	
 	public int getDinero() {
 		return cartera.getDinero();
 	}
@@ -110,8 +122,8 @@ public class Control {
 		return pila;
 	}
 	
-	public ArrayList<Ficha> getFichasTablero() {
-		return fichasTablero;
+	public ArrayList<Ficha> getFichas() {
+		return fichas;
 	}
 	
 }

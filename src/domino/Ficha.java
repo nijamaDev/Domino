@@ -33,8 +33,8 @@ public class Ficha extends JLabel {
 	public Ficha() {}
 	
 	public Ficha(ImageIcon image, int vIzq, int vDer) {
-		this.front = image;
 		setIcon(back);
+		this.front = image;
 		this.vIzq = vIzq;
 		this.vDer = vDer;
 	}

@@ -64,7 +64,7 @@ public class Control {
 		oponente = new Oponente();
 	}
 	
-	public void nuevaRonda(boolean inicia) {
+	public void nuevaRonda() {
 		jugador.getFichasJugador().clear();
 		oponente.getFichasJugador().clear();
 		fichasTablero.clear();

@@ -1,8 +1,8 @@
 /**
   Archivo: Domino.java
   Fecha creación:		Jul 14, 2019
-  Última modificación:	Jul 15, 2019
-  Versión: 0.4
+  Última modificación:	Jul 22, 2019
+  Versión: 0.5
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558
@@ -21,6 +21,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -36,6 +37,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -66,9 +68,9 @@ public class Domino extends JFrame {
 		ZONAJUEGO_SIZE = new Dimension(TABLEROP_HSIZE,  ZONAJUEGO_VSIZE),
 		PILABACKP_SIZE = new Dimension(PILABACKP_HSIZE, ZONAJUEGO_VSIZE),
 		PILABUTP_SIZE  = new Dimension(PILABACKP_HSIZE, PILABUTP_VSIZE),
-		PILAP_SIZE  = new Dimension(PILABACKP_HSIZE, PILAP_VSIZE),
-		JUGADORP_SIZE  = new Dimension(WINDOW_HSIZE, JUGADORP_VSIZE),
-			
+		PILAP_SIZE     = new Dimension(PILABACKP_HSIZE, PILAP_VSIZE),
+		JUGADORP_SIZE  = new Dimension(WINDOW_HSIZE,    JUGADORP_VSIZE),
+		INICIOFICHAP   = new Dimension(WINDOW_HSIZE,    WINDOW_VSIZE - TITULOP_VSIZE),
 		FICHA_V        = new Dimension(FICHA_HSIZE,     FICHA_VSIZE),
 		FICHA_H        = new Dimension(FICHA_VSIZE,     FICHA_HSIZE);
 	private Escuchas escucha;
@@ -112,16 +114,22 @@ public class Domino extends JFrame {
 	}
 	
 	public void nuevaRonda() {
+		if (!control.puedeApostar()) {
+			
+			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
+			
+			return;
+		}
 		control.nuevaRonda(escogerInicio());
 		c = new GridBagConstraints();
-		xIzq = 48;
+		xIzq = 28;
 		yIzq = 12;
-		xDer = 48;
-		yDer = 12;
+		xDer = xIzq;
+		yDer = yIzq;
 		esquinaIzq = false;
 		IzqA1 = false;
-		DerA1 = false;
 		esquinaDer = false;
+		DerA1 = false;
 		printDinero();
 		printFichas();
 	}
@@ -211,7 +219,7 @@ public class Domino extends JFrame {
 		Image imagen;
 		try {
 			imagen = new ImageIcon(ImageIO.read(new File("src/imagenes/tablero.jpg"))
-								  ).getImage().getScaledInstance(1150, 400, Image.SCALE_SMOOTH);
+								  ).getImage().getScaledInstance(TABLEROP_HSIZE, TABLEROP_VSIZE, Image.SCALE_SMOOTH);
 			tableroPanel = new ImageJPanel(imagen);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -298,18 +306,31 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
-	private boolean escogerInicio() { /*// Escoge quién inicia la partida
+	private boolean escogerInicio() { // Escoge quién inicia la partida
 		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
 		ArrayList<Ficha> fichas = control.getFichas();
 		inicioPanel = (JPanel) this.getGlassPane();
+		inicioPanel.setLayout(new BorderLayout());
 		inicioPanel.setOpaque(true);
 		inicioPanel.setPreferredSize(WINDOW_SIZE);
 		inicioPanel.setBackground(Color.black);
 		inicioPanel.setVisible(true);
 		
+		Titulos tituloInicio = new Titulos("Escoge una ficha", 30, Color.black);
+		inicioPanel.add(tituloInicio, BorderLayout.PAGE_START);
+		tituloInicio.setPreferredSize(TITULOP_SIZE);
+		
+		JPanel inicioFichasPanel = new JPanel(new GridLayout(7, 4));
+		inicioFichasPanel.setPreferredSize(INICIOFICHAP);
+		inicioPanel.add(inicioFichasPanel, BorderLayout.CENTER);
+		for (int i=0; i<28; i++) {
+			fichas.get(i).destaparFicha();
+			//inicioFichasPanel.add(fichas.get(i), i);
+		}
+		inicioPanel.setVisible(false);
 		revalidate();
 		repaint();
-		*/
+		
 		return false; //place holder
 	}
 	
@@ -354,27 +375,39 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
+	private void cogerFicha(boolean quien) {
+		control.cogerFicha(quien);
+		printFichas();
+	}
+	
 	private void hacerJugada() {
 		Ficha fichaOponente = control.hacerJugada();
         if (fichaOponente != null) {
         	if (colocarFicha(fichaOponente)) {
+        		control.getFichasOponente().remove(fichaOponente);
+            	oponentPanel.remove(fichaOponente);
+            	tableroPanel.add(fichaOponente, c);
+        		if(ganar())
+        			nuevaRonda();
         		return;
         	}
         	else {
+        		JOptionPane.showMessageDialog(allPanel, "Something is wrong...");
         		//something is wrong...
         	}
         } else { // computador no puede continuar
-        	ganar();
+        	if(ganar())
+        		nuevaRonda();
         }
 	}
 	
-	private boolean colocarFicha(Ficha dragFicha) { // Coloca la ficha en el tablero
+	private boolean colocarFicha(Ficha ficha) { // Coloca la ficha en el tablero
 		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
 		int tableroSize = fichasTablero.size(),
 			vIzqTablero,
 			vDerTablero,
-			vIzq = dragFicha.getvIzq(), 
-			vDer = dragFicha.getvDer();
+			vIzq = ficha.getvIzq(), 
+			vDer = ficha.getvDer();
 		if (tableroSize == 0) { // PRIMERA FICHA, puede ser cualquier ficha
 			if (vIzq != vDer) { // Si no es doble la coloca horizontal
 				c.gridx = xIzq;
@@ -383,8 +416,8 @@ public class Domino extends JFrame {
 				c.gridheight = 2;
 				xIzq += -4;
 				xDer +=  4;
-				dragFicha.girarFicha(Ficha.ROTAR_IZQ);
-        		dragFicha.setPreferredSize(FICHA_H);
+				ficha.girarFicha(Ficha.ROTAR_IZQ);
+        		ficha.setPreferredSize(FICHA_H);
 			} else {  // Si es doble la coloca vertical
 				c.gridx = xIzq + 1;
 				c.gridy = yIzq - 1;
@@ -393,20 +426,20 @@ public class Domino extends JFrame {
 				xIzq += -3;
 				xDer +=  3;
 			}
-			fichasTablero.add(dragFicha);
+			fichasTablero.add(ficha);
 			return true;
 		}
 		vIzqTablero = fichasTablero.get(0).getvIzq();
 		vDerTablero = fichasTablero.get(tableroSize-1).getvDer();
-		if (dragFicha.getvIzq() != vIzqTablero &&
-			dragFicha.getvIzq() != vDerTablero &&
-			dragFicha.getvDer() != vIzqTablero &&
-			dragFicha.getvDer() != vDerTablero
+		if (ficha.getvIzq() != vIzqTablero &&
+			ficha.getvIzq() != vDerTablero &&
+			ficha.getvDer() != vIzqTablero &&
+			ficha.getvDer() != vDerTablero
 			) { // si la ficha no es una jugada válida, no la coloca en el tablero.
 			return false;
 		}
 		//------------------- TABLERO LADO IZQUIERDO -------------------
-		if (vIzqTablero == dragFicha.getvIzq() || vIzqTablero == dragFicha.getvDer()) {
+		if (vIzqTablero == ficha.getvIzq() || vIzqTablero == ficha.getvDer()) {
 			// ¿La ficha se puede colocar en la izquierda?
 			boolean esquina = false;
 			int porMenos = 1;
@@ -423,7 +456,7 @@ public class Domino extends JFrame {
 			if (esquinaIzq)
 				porMenos = -1;
 			//  -------------- FICHA CON IZQ == DER ----------------
-			if (dragFicha.getvIzq() == dragFicha.getvDer()) { // ¿Es doble cara? Vertical
+			if (ficha.getvIzq() == ficha.getvDer()) { // ¿Es doble cara? Vertical
 				if (!esquina && !esquinaIzq) {
 					xIzq +=  2;
 					yIzq += -1;
@@ -449,20 +482,20 @@ public class Domino extends JFrame {
 					IzqA1 = true;
 					esquinaIzq = true;
 				}
-				fichasTablero.add(0, dragFicha);
+				fichasTablero.add(0, ficha);
 				return true;
 				// FICHA LADO DERECHO == TABLERO LADO IZQUIERDO
-			} else if (dragFicha.getvDer() == vIzqTablero) { 
+			} else if (ficha.getvDer() == vIzqTablero) { 
 				// El lado derecho de la ficha coincide con el izquierdo del tablero?
-				dragFicha.girarFicha(Ficha.ROTAR_IZQ*porMenos); // gira la ficha hacia la izquierda
-        		dragFicha.setPreferredSize(FICHA_H);
+				ficha.girarFicha(Ficha.ROTAR_IZQ*porMenos); // gira la ficha hacia la izquierda
+        		ficha.setPreferredSize(FICHA_H);
 				c.gridx = xIzq;
 				c.gridy = yIzq;
 				c.gridwidth = 4;
 				c.gridheight = 2;
 				xIzq += -4*porMenos;
 				if (esquinaIzq) {
-        			dragFicha.cambiarVal();
+        			ficha.cambiarVal();
         			IzqA1 = false;
         		}
 				if (esquina && !esquinaIzq) {
@@ -470,14 +503,14 @@ public class Domino extends JFrame {
 					yIzq += 4;
 					c.gridwidth = 2;
 					c.gridheight = 4;
-					dragFicha.girarFicha(Ficha.ROTAR_ABAJO);
-					dragFicha.setPreferredSize(FICHA_V);
-					dragFicha.cambiarVal();
+					ficha.girarFicha(Ficha.ROTAR_ABAJO);
+					ficha.setPreferredSize(FICHA_V);
+					ficha.cambiarVal();
 					esquinaIzq = true;
 					IzqA1 = true;
 				}
         		
-        		fichasTablero.add(0, dragFicha);
+        		fichasTablero.add(0, ficha);
 				return true;
 				// FICHA LADO IZQUIERDO == TABLERO LADO IZQUIERDO (ELSE)
 			} else { // el lado izquierdo entonces coincide con el izquierdo del tablero.
@@ -486,10 +519,10 @@ public class Domino extends JFrame {
 				c.gridwidth = 4;
 				c.gridheight = 2;
 				xIzq += -4*porMenos;
-				dragFicha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
-				dragFicha.setPreferredSize(FICHA_H);
+				ficha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
+				ficha.setPreferredSize(FICHA_H);
 				if (esquinaIzq) {
-        			dragFicha.cambiarVal();
+        			ficha.cambiarVal();
         			IzqA1 = false;
         		}
 				if (esquina && !esquinaIzq) {
@@ -497,19 +530,19 @@ public class Domino extends JFrame {
 					yIzq += 4;
 					c.gridwidth = 2;
 					c.gridheight = 4;
-					dragFicha.girarFicha(Ficha.ROTAR_0);
-					dragFicha.setPreferredSize(FICHA_V);
-					dragFicha.cambiarVal();
+					ficha.girarFicha(Ficha.ROTAR_0);
+					ficha.setPreferredSize(FICHA_V);
+					ficha.cambiarVal();
 					esquinaIzq = true;
 					IzqA1 = true;
 				}
 				
-				fichasTablero.add(0, dragFicha);
+				fichasTablero.add(0, ficha);
 				return true;
 			}
 		}
 		// ------------------- TABLERO LADO DERECHO ------------------------
-		if (vDerTablero == dragFicha.getvIzq() || vDerTablero == dragFicha.getvDer()) {
+		if (vDerTablero == ficha.getvIzq() || vDerTablero == ficha.getvDer()) {
 			// ¿La ficha se puede colocar en la derecha?
 			boolean esquina = false;
 			int porMenos = 1;
@@ -528,7 +561,7 @@ public class Domino extends JFrame {
 			if (esquinaDer)
 				porMenos = -1;
 			//  -------------- FICHA CON IZQ == DER ----------------
-			if (dragFicha.getvIzq() == dragFicha.getvDer()) { // ¿Es doble cara? Vertical
+			if (ficha.getvIzq() == ficha.getvDer()) { // ¿Es doble cara? Vertical
 				if (!esquina && !esquinaDer) {
 					yDer += -1;
 				}
@@ -557,21 +590,21 @@ public class Domino extends JFrame {
 					DerA1 = true;
 					esquinaDer = true;
 				}
-				fichasTablero.add(dragFicha);
+				fichasTablero.add(ficha);
 				return true;
 				
 				// FICHA LADO IZQUIERDO == TABLERO LADO DERECHO
-			} else if (dragFicha.getvIzq() == vDerTablero) { 
+			} else if (ficha.getvIzq() == vDerTablero) { 
 				// El lado derecho de la ficha coincide con el izquierdo del tablero?
-				dragFicha.girarFicha(Ficha.ROTAR_IZQ*porMenos); // gira la ficha hacia la izquierda
-				dragFicha.setPreferredSize(FICHA_H);
+				ficha.girarFicha(Ficha.ROTAR_IZQ*porMenos); // gira la ficha hacia la izquierda
+				ficha.setPreferredSize(FICHA_H);
 				c.gridx = xDer;
 				c.gridy = yDer;
 				c.gridwidth = 4;
 				c.gridheight = 2;
 				xDer += 4*porMenos;
 				if (esquinaDer) {
-					dragFicha.cambiarVal();
+					ficha.cambiarVal();
 					if(DerA1)
 						DerA1 = false;
 				}
@@ -580,26 +613,26 @@ public class Domino extends JFrame {
 					yDer += -2;
 					c.gridwidth = 2;
 					c.gridheight = 4;
-					dragFicha.girarFicha(Ficha.ROTAR_ABAJO);
-					dragFicha.setPreferredSize(FICHA_V);
-					dragFicha.cambiarVal();
+					ficha.girarFicha(Ficha.ROTAR_ABAJO);
+					ficha.setPreferredSize(FICHA_V);
+					ficha.cambiarVal();
 					DerA1 = true;
 					esquinaDer = true;
 				}
 
-				fichasTablero.add(dragFicha);
+				fichasTablero.add(ficha);
 				return true;
 				// FICHA LADO DERECHO == TABLERO LADO DERECHO (ELSE)
 			} else { // el lado derecho entonces coincide con el derecho del tablero.
-				dragFicha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
-				dragFicha.setPreferredSize(FICHA_H);
+				ficha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
+				ficha.setPreferredSize(FICHA_H);
 				c.gridx = xDer;
 				c.gridy = yDer;
 				c.gridwidth = 4;
 				c.gridheight = 2;
 				xDer += 4*porMenos;
 				if (esquinaDer) {
-					dragFicha.cambiarVal();
+					ficha.cambiarVal();
 					if(DerA1)
 						DerA1 = false;
 				}
@@ -608,14 +641,14 @@ public class Domino extends JFrame {
 					yDer += -2;
 					c.gridwidth = 2;
 					c.gridheight = 4;
-					dragFicha.girarFicha(Ficha.ROTAR_0);
-					dragFicha.setPreferredSize(FICHA_V);
-					dragFicha.cambiarVal();
+					ficha.girarFicha(Ficha.ROTAR_0);
+					ficha.setPreferredSize(FICHA_V);
+					ficha.cambiarVal();
 					DerA1 = true;
 					esquinaDer = true;
 				}
 
-				fichasTablero.add(dragFicha);
+				fichasTablero.add(ficha);
 				return true;
 			}
 		}
@@ -623,24 +656,24 @@ public class Domino extends JFrame {
     	return false;
 	}
 	
-	private void cogerFicha(boolean quien) {
-		control.cogerFicha(quien);
-		printFichas();
-	}
-	
-	private void ganar() {
+	private boolean ganar() {
 		int ganador = control.ganar();
 		switch (ganador) {
 		case -1:
 			//el juego sigue, nadie ha ganado
-			return;
+			return false;
 		case 0:
 			//perdedor (ganó la máquina)
-			break;
+			printDinero();
+			JOptionPane.showMessageDialog(this, "Has perdido.");
+			return true;
 		case 1:
 			//ganador
-			break;
+			printDinero();
+			JOptionPane.showMessageDialog(this, "GANADOR");
+			return true;
 		}
+		return false;
 		
 	}
 	
@@ -730,6 +763,10 @@ public class Domino extends JFrame {
             }
             repaint();
             dragFicha = null;
+            if (ganar()) {
+            	nuevaRonda();
+            	return;
+            }
             hacerJugada();
         }
 	}

@@ -1,8 +1,8 @@
 /**
   Archivo: Control.java
   Fecha creación:		Jul 14, 2019
-  Última modificación:	Jul 15, 2019
-  Versión: 0.4
+  Última modificación:	Jul 22, 2019
+  Versión: 0.5
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558
@@ -37,6 +37,7 @@ public class Control {
 	private int apuesta;
 	
 	public Control() {
+		apuesta = 10;
 		fichas = new ArrayList<Ficha>(28); // Contiene todas las fichas
 		pila = new ArrayList<Ficha>(); // Cada ronda se agregan todas las fichas, se revuelven y se reparten
 		fichasTablero = new ArrayList<Ficha>(); // Fichas colocadas en el tablero
@@ -64,6 +65,8 @@ public class Control {
 	}
 	
 	public void nuevaRonda(boolean inicia) {
+		jugador.getFichasJugador().clear();
+		oponente.getFichasJugador().clear();
 		fichasTablero.clear();
 		pila.clear();
 		for(int i=0; i<fichas.size(); i++) {
@@ -72,8 +75,8 @@ public class Control {
 		}
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
-		apuesta = 0;
-		for (int i=0; i<7; i++) {  // Saca 7 elementos de la pila para jugador y 7 para la m�quina
+		
+		for (int i=0; i<7; i++) {  // Saca 7 elementos de la pila para jugador y 7 para la máquina
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
 			pila.remove(0);
@@ -83,26 +86,45 @@ public class Control {
 		}
 		 // si no inicia el jugador, inicia la m�quina
 		//oponente.juega(inicia);
-		
-		
-		
-		
 	}
 	
 	public Ficha hacerJugada(){
-			return oponente.Hacerjugada(fichasTablero);
+		Ficha ficha = null;
+		while (pila.size() > 0) {
+			ficha = oponente.hacerjugada(fichasTablero);
+			if (ficha != null)
+				break;
+			cogerFicha(false);
+		}
+			return ficha;
 	}
 	
 	
 	public int ganar() {
-		if (jugador.getFichasJugador().size() == 0) { // jugador ganó
-			return 1;
-		}
-		else if (oponente.getFichasJugador().size() == 0) { //gana la máquina
+		if (oponente.getFichasJugador().size() == 0) { //gana la máquina
+			cartera.addDinero(-10);
 			return 0;
-		} else {
-			return -1;
+		} else if (jugador.getFichasJugador().size() == 0) { // jugador ganó
+			cartera.addDinero(10);
+			return 1;
+		} else if (pila.size() == 0) {
+			if (jugador.puedeJugar(fichasTablero) >= 0 || oponente.puedeJugar(fichasTablero) >= 0) {
+				return -1; // el juego continúa
+			} else {
+				int valJugador  = jugador.valFichas();
+				int valOponente = oponente.valFichas();
+				if (valJugador > valOponente) {
+					cartera.addDinero(10);
+					return 1; //jugador gana
+				}
+				else {
+					cartera.addDinero(-10);
+					return 0; // máquina gana
+				}
+			}
 		}
+			return -1; // el juego sigue, pasa al siguiente turno
+		
 		
 	}
 	
@@ -118,6 +140,13 @@ public class Control {
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}
+	}
+	
+	public boolean puedeApostar() {
+		if(cartera.puedeApostar(apuesta)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public int getDinero() {

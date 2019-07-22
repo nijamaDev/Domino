@@ -1,8 +1,8 @@
 /**
   Archivo: Oponente.java
   Fecha creación:		Jul 14, 2019
-  Última modificación:	Jul 15, 2019
-  Versión: 0.4
+  Última modificación:	Jul 22, 2019
+  Versión: 0.5
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558
@@ -24,9 +24,11 @@ public class Oponente extends Jugador{
 	/**
 	 * @param tablero
 	 */
-	public Ficha Hacerjugada(ArrayList<Ficha> tablero) {
-		
-		return null;
+	public Ficha hacerjugada(ArrayList<Ficha> tablero) {
+		int nficha;
+		nficha = puedeJugar(tablero);
+		if (nficha < 0)
+			return null;
+		return fichasDelJugador.get(nficha);
 	}
-
 }

@@ -354,6 +354,20 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
+	private void hacerJugada() {
+		Ficha fichaOponente = control.hacerJugada();
+        if (fichaOponente != null) {
+        	if (colocarFicha(fichaOponente)) {
+        		return;
+        	}
+        	else {
+        		//something is wrong...
+        	}
+        } else { // computador no puede continuar
+        	ganar();
+        }
+	}
+	
 	private boolean colocarFicha(Ficha dragFicha) { // Coloca la ficha en el tablero
 		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
 		int tableroSize = fichasTablero.size(),
@@ -614,7 +628,8 @@ public class Domino extends JFrame {
 		printFichas();
 	}
 	
-	private void ganar(int ganador) {
+	private void ganar() {
+		int ganador = control.ganar();
 		switch (ganador) {
 		case -1:
 			//el juego sigue, nadie ha ganado
@@ -691,6 +706,7 @@ public class Domino extends JFrame {
 		@Override
         public void mouseReleased(MouseEvent me) {
 			//System.out.println("MouseReleased");
+			boolean jugada = false;
 			ArrayList<Ficha> fichasJugador = control.getFichasJugador();
             if (dragFicha == null) { // Just in case
                 return;
@@ -704,6 +720,7 @@ public class Domino extends JFrame {
                 clickedPanel.revalidate();
             } else {
             	if(colocarFicha(dragFicha)) { // Si la ficha puede colocarse se coloca
+            		jugada = true;
             		droppedPanel.add(dragFicha, c);
             		fichasJugador.remove(dragFicha);
             	} else { // Si no se puede colocar, se devuelve
@@ -713,10 +730,7 @@ public class Domino extends JFrame {
             }
             repaint();
             dragFicha = null;
+            hacerJugada();
         }
 	}
 }
-
-
-
-

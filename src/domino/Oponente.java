@@ -14,9 +14,19 @@
 
 package domino;
 
+import java.util.ArrayList;
+
 /**
  * 
  */
 public class Oponente extends Jugador{
+
+	/**
+	 * @param tablero
+	 */
+	public Ficha Hacerjugada(ArrayList<Ficha> tablero) {
+		
+		return null;
+	}
 
 }

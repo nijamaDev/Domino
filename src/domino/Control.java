@@ -57,6 +57,12 @@ public class Control {
 		}
 	}
 	
+	public void nuevaPartida() {
+		cartera = new Cartera(30);
+		jugador = new Jugador();
+		oponente = new Oponente();
+	}
+	
 	public void nuevaRonda(boolean inicia) {
 		fichasTablero.clear();
 		pila.clear();
@@ -64,8 +70,6 @@ public class Control {
 			fichas.get(i).girarFicha(Ficha.ROTAR_0);
 			fichas.get(i).taparFicha();
 		}
-			
-		
 		pila.addAll(fichas);       // Crea una pila con todas las fichas
 		Collections.shuffle(pila); // Revuelve la pila de fichas
 		apuesta = 0;
@@ -79,26 +83,22 @@ public class Control {
 		}
 		 // si no inicia el jugador, inicia la m�quina
 		//oponente.juega(inicia);
-		while(true) {
-			//jugador.juega();
-			//oponente.juega();
-			break;
-		}
+		
+		
 		
 		
 	}
 	
-	public void nuevaPartida() {
-		cartera = new Cartera(30);
-		jugador = new Jugador();
-		oponente = new Oponente();
+	public Ficha hacerJugada(){
+			return oponente.Hacerjugada(fichasTablero);
 	}
 	
-	private int ganar() {
-		if (jugador.getFichasJugador().size() == 0) {
+	
+	public int ganar() {
+		if (jugador.getFichasJugador().size() == 0) { // jugador ganó
 			return 1;
 		}
-		else if (oponente.getFichasJugador().size() == 0) {
+		else if (oponente.getFichasJugador().size() == 0) { //gana la máquina
 			return 0;
 		} else {
 			return -1;

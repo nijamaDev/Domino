@@ -91,7 +91,7 @@ public class Domino extends JFrame {
 	private GridBagConstraints c = new GridBagConstraints();
 	private int xIzq, yIzq, //Coordenadas del lado izquierdo del tablero (para colocar fichas)
 				xDer, yDer; //Coordenadas del lado derecho del tablero
-	private boolean esquinaIzq, IzqA1, esquinaDer;
+	private boolean esquinaIzq, IzqA1, esquinaDer, DerA1;
 	
 	public Domino() {
 		control = new Control();
@@ -114,12 +114,13 @@ public class Domino extends JFrame {
 	public void nuevaRonda() {
 		control.nuevaRonda(escogerInicio());
 		c = new GridBagConstraints();
-		xIzq = 28;
+		xIzq = 48;
 		yIzq = 12;
-		xDer = 28;
+		xDer = 48;
 		yDer = 12;
 		esquinaIzq = false;
 		IzqA1 = false;
+		DerA1 = false;
 		esquinaDer = false;
 		printDinero();
 		printFichas();
@@ -523,11 +524,23 @@ public class Domino extends JFrame {
 				c.gridwidth = 2;
 				c.gridheight = 4;
 				xDer += 2;
-				if (esquinaDer)
+				if (esquinaDer) {
+					c.gridx = xDer;
+					xDer += 2;
+					c.gridy = yDer - 2;
+					if(DerA1) {
+						yDer += -3;
+						c.gridy = yDer;
+						yDer += 2;
+						DerA1 = false;
+					}
+					yDer += -1;
 					xDer += -6;
+				}
 				if (esquina && !esquinaDer) {
-					xDer +=  4;
+					xDer += -4;
 					yDer += -3;
+					DerA1 = true;
 					esquinaDer = true;
 				}
 				fichasTablero.add(dragFicha);
@@ -545,15 +558,18 @@ public class Domino extends JFrame {
 				xDer += 4*porMenos;
 				if (esquinaDer) {
 					dragFicha.cambiarVal();
+					if(DerA1)
+						DerA1 = false;
 				}
 				if (esquina && !esquinaDer) {
-					xDer += -4;
-					yDer += -4;
+					xDer += -6;
+					yDer += -2;
 					c.gridwidth = 2;
 					c.gridheight = 4;
 					dragFicha.girarFicha(Ficha.ROTAR_ABAJO);
 					dragFicha.setPreferredSize(FICHA_V);
 					dragFicha.cambiarVal();
+					DerA1 = true;
 					esquinaDer = true;
 				}
 
@@ -561,24 +577,27 @@ public class Domino extends JFrame {
 				return true;
 				// FICHA LADO DERECHO == TABLERO LADO DERECHO (ELSE)
 			} else { // el lado derecho entonces coincide con el derecho del tablero.
+				dragFicha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
+				dragFicha.setPreferredSize(FICHA_H);
 				c.gridx = xDer;
 				c.gridy = yDer;
 				c.gridwidth = 4;
 				c.gridheight = 2;
 				xDer += 4*porMenos;
-				dragFicha.girarFicha(Ficha.ROTAR_DER*porMenos); // gira la ficha hacia la derecha
-				dragFicha.setPreferredSize(FICHA_H);
 				if (esquinaDer) {
 					dragFicha.cambiarVal();
+					if(DerA1)
+						DerA1 = false;
 				}
 				if (esquina && !esquinaDer) {
-					xDer += -4;
-					yDer += -4;
+					xDer += -6;
+					yDer += -2;
 					c.gridwidth = 2;
 					c.gridheight = 4;
 					dragFicha.girarFicha(Ficha.ROTAR_0);
 					dragFicha.setPreferredSize(FICHA_V);
 					dragFicha.cambiarVal();
+					DerA1 = true;
 					esquinaDer = true;
 				}
 

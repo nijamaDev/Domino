@@ -90,12 +90,7 @@ public class Control {
 	
 	public Ficha hacerJugada(){
 		Ficha ficha = null;
-		while (pila.size() > 0) {
-			ficha = oponente.hacerjugada(fichasTablero);
-			if (ficha != null)
-				break;
-			cogerFicha(false);
-		}
+		ficha = oponente.hacerJugada(fichasTablero);
 			return ficha;
 	}
 	
@@ -108,10 +103,8 @@ public class Control {
 			cartera.addDinero(10);
 			return 1;
 		} else if (pila.size() == 0) {
-			if (jugador.puedeJugar(fichasTablero) >= 0) {
-				return -1; // el juego continúa
-			} else if (oponente.puedeJugar(fichasTablero) >= 0) {
-				return -2;
+			if (jugador.puedeJugar(fichasTablero) >= 0 && oponente.puedeJugar(fichasTablero) >= 0) {
+				return -1;
 			} else {
 				int valJugador  = jugador.valFichas();
 				int valOponente = oponente.valFichas();
@@ -130,9 +123,9 @@ public class Control {
 		
 	}
 	
-	public void cogerFicha(boolean quien) {
+	public boolean cogerFicha(boolean quien) {
 		if (pila.size() < 1)
-			return;
+			return false;
 		if (quien) {
 			pila.get(0).destaparFicha();
 			jugador.addFicha(pila.get(0));
@@ -142,6 +135,7 @@ public class Control {
 			oponente.addFicha(pila.get(0));
 			pila.remove(0);
 		}
+		return true;
 	}
 	
 	public boolean puedeApostar() {

@@ -402,15 +402,32 @@ public class Domino extends JFrame {
 	}
 	
 	
-	private void cogerFicha(boolean quien) {
-		control.cogerFicha(quien);
-		printFichas();
-		if(ganar())
-    		escogerInicio();
+	private Ficha cogerFicha(boolean quien) {
+		if (!quien) {
+			Ficha ficha = null;
+			ficha = control.hacerJugada();
+			while (control.getPila().size() > 0) {
+				ficha = control.hacerJugada();
+				if (ficha != null)
+					return ficha;
+				if(!control.cogerFicha(false)) {
+					if(ganar())
+						escogerInicio();
+					return ficha;
+				}
+			}
+			return ficha;
+		} else {
+			control.cogerFicha(true);
+			printFichas();
+			if(ganar())
+	    		escogerInicio();
+		}
+		return null;
 	}
 	
 	private void hacerJugada() {
-		Ficha fichaOponente = control.hacerJugada();
+		Ficha fichaOponente = cogerFicha(false);
 		for (int i=0; i<control.getFichasOponente().size(); i++) {
 			oponentPanel.add(control.getFichasOponente().get(i));
 			pilaPanel.remove(control.getFichasOponente().get(i));

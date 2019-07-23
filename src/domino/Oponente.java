@@ -24,7 +24,7 @@ public class Oponente extends Jugador{
 	/**
 	 * @param tablero
 	 */
-	public Ficha hacerjugada(ArrayList<Ficha> tablero) {
+	public Ficha hacerJugada(ArrayList<Ficha> tablero) {
 		int nficha;
 		nficha = puedeJugar(tablero);
 		if (nficha < 0)

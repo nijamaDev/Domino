@@ -14,25 +14,48 @@
 
 package domino;
 
+// TODO: Auto-generated Javadoc
 /**
- * Maneja la cantidad de dinero del jugador y las apuestas
+ * Maneja la cantidad de dinero del jugador y las apuestas.
  */
 public class Cartera {
 	
+	/** The dinero. */
 	private int dinero;
 	
+	/**
+	 * Instantiates a new cartera.
+	 *
+	 * @param dinero the dinero
+	 */
 	public Cartera(int dinero) {
 		this.dinero = dinero;
 	}
 	
+	/**
+	 * Adds the dinero.
+	 *
+	 * @param suma the suma
+	 */
 	public void addDinero(int suma) {
 		dinero += suma;
 	}
 	
+	/**
+	 * Gets the dinero.
+	 *
+	 * @return the dinero
+	 */
 	public int getDinero() {
 		return dinero;
 	}
 	
+	/**
+	 * Puede apostar.
+	 *
+	 * @param apuesta the apuesta
+	 * @return true, if successful
+	 */
 	public boolean puedeApostar(int apuesta) {
 		if (dinero < apuesta)
 			return false;

@@ -19,16 +19,27 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
+ * The Class ImageJPanel.
  */
 public class ImageJPanel extends JPanel {
  
+    /** The imagen. */
     private Image imagen;
  
+    /**
+     * Instantiates a new image J panel.
+     */
     public ImageJPanel() {
     }
  
+    /**
+     * Instantiates a new image J panel.
+     *
+     * @param nombreImagen the nombre imagen
+     */
     public ImageJPanel(String nombreImagen) {
         if (nombreImagen != null) {
             imagen = new ImageIcon(
@@ -37,12 +48,22 @@ public class ImageJPanel extends JPanel {
         }
     }
  
+    /**
+     * Instantiates a new image J panel.
+     *
+     * @param imagenInicial the imagen inicial
+     */
     public ImageJPanel(Image imagenInicial) {
         if (imagenInicial != null) {
             imagen = imagenInicial;
         }
     }
  
+    /**
+     * Sets the imagen.
+     *
+     * @param nombreImagen the new imagen
+     */
     public void setImagen(String nombreImagen) {
         if (nombreImagen != null) {
             imagen = new ImageIcon(
@@ -55,12 +76,22 @@ public class ImageJPanel extends JPanel {
         repaint();
     }
  
+    /**
+     * Sets the imagen.
+     *
+     * @param nuevaImagen the new imagen
+     */
     public void setImagen(Image nuevaImagen) {
         imagen = nuevaImagen;
  
         repaint();
     }
  
+    /**
+     * Paint.
+     *
+     * @param g the g
+     */
     @Override
     public void paint(Graphics g) {
         if (imagen != null) {

@@ -122,7 +122,6 @@ public class Domino extends JFrame {
 			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
 			return;
 		}
-		
 		control.nuevaRonda();
 		c = new GridBagConstraints();
 		xIzq = 28;
@@ -134,7 +133,13 @@ public class Domino extends JFrame {
 		esquinaDer = false;
 		DerA1 = false;
 		if (!inicia) { // inicia la máquina
-			colocarFicha(control.getFichasOponente().get(0));
+			Ficha ficha1 = control.getFichasOponente().get(0);
+			if (colocarFicha(ficha1)) {
+				control.getFichasOponente().remove(ficha1);
+				oponentPanel.remove(ficha1);
+				tableroPanel.add(ficha1, c);
+			}
+			
 		}
 		printDinero();
 		printFichas();
@@ -325,7 +330,6 @@ public class Domino extends JFrame {
 		
 		Titulos tituloInicio = new Titulos("Escoge una ficha", 30, Color.black);
 		inicioPanel.add(tituloInicio, BorderLayout.PAGE_START);
-		tituloInicio.setPreferredSize(TITULOP_SIZE);
 		
 		JPanel inicioFichasPanel = new JPanel(new GridLayout(4, 7));
 		inicioFichasPanel.setPreferredSize(INICIOFICHAP);
@@ -360,6 +364,7 @@ public class Domino extends JFrame {
 				"Dinero:\n"+ control.getDinero() + "\n" +
 				"Apuesta:\n" + control.getApuesta());
 	}
+	
 	
 	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
 		ArrayList<Ficha> list;
@@ -422,6 +427,7 @@ public class Domino extends JFrame {
         }
 	}
 	
+	
 	private boolean colocarFicha(Ficha ficha) { // Coloca la ficha en el tablero
 		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
 		int tableroSize = fichasTablero.size(),
@@ -446,6 +452,7 @@ public class Domino extends JFrame {
 				c.gridheight = 4;
 				xIzq += -3;
 				xDer +=  3;
+				ficha.destaparFicha();
 			}
 			fichasTablero.add(ficha);
 			return true;
@@ -459,6 +466,7 @@ public class Domino extends JFrame {
 			) { // si la ficha no es una jugada válida, no la coloca en el tablero.
 			return false;
 		}
+		ficha.destaparFicha();
 		//------------------- TABLERO LADO IZQUIERDO -------------------
 		if (vIzqTablero == ficha.getvIzq() || vIzqTablero == ficha.getvDer()) {
 			// ¿La ficha se puede colocar en la izquierda?
@@ -677,6 +685,7 @@ public class Domino extends JFrame {
     	return false;
 	}
 	
+	
 	private boolean ganar() {
 		int ganador = control.ganar();
 		switch (ganador) {
@@ -727,7 +736,7 @@ public class Domino extends JFrame {
             Random random = new Random();
             Ficha fichaOp = allFichas.get(random.nextInt(28));
             while (fichaOp == clickedFicha) {
-            	fichaOp = allFichas.get(random.nextInt());
+            	fichaOp = allFichas.get(random.nextInt(28));
             }
             fichaOp.destaparFicha();
             clickedFicha.destaparFicha();
@@ -739,9 +748,9 @@ public class Domino extends JFrame {
             int valFichaOp = fichaOp.getvIzq() + fichaOp.getvDer();
             if (valFichaJu >= valFichaOp) {
             	JOptionPane.showMessageDialog(allPanel, "Tu empiezas.");
-            	iniciar(true);
                 clickedFicha.taparFicha();
                 fichaOp.taparFicha();
+            	iniciar(true);
             } else {
             	JOptionPane.showMessageDialog(allPanel, "Yo empiezo.");
                 clickedFicha.taparFicha();

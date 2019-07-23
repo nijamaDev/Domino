@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.awt.Image;
 import java.awt.Point;
 
@@ -77,6 +76,7 @@ public class Domino extends JFrame {
 		FICHA_V        = new Dimension(FICHA_HSIZE,     FICHA_VSIZE),
 		FICHA_H        = new Dimension(FICHA_VSIZE,     FICHA_HSIZE);
 	private Escuchas escucha;
+	private EscuchaBotones escuchaBotones;
 	private EscuchaInicio escuchaInicio;
 	private JButton nuevo, salir, getFicha;
 	private JLayeredPane layeredPane; // necesario para arrastrar las fichas (se colola en this.getContentPane()
@@ -112,39 +112,6 @@ public class Domino extends JFrame {
 		nuevaPartida();
 	}
 	
-	public void nuevaPartida() {
-		control.nuevaPartida();
-		escogerInicio();
-	}
-	
-	public void nuevaRonda(boolean inicia) {
-		if (!control.puedeApostar()) {
-			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
-			return;
-		}
-		control.nuevaRonda();
-		c = new GridBagConstraints();
-		xIzq = 28;
-		yIzq = 12;
-		xDer = xIzq;
-		yDer = yIzq;
-		esquinaIzq = false;
-		IzqA1 = false;
-		esquinaDer = false;
-		DerA1 = false;
-		if (!inicia) { // inicia la máquina
-			Ficha ficha1 = control.getFichasOponente().get(0);
-			if (colocarFicha(ficha1)) {
-				control.getFichasOponente().remove(ficha1);
-				oponentPanel.remove(ficha1);
-				tableroPanel.add(ficha1, c);
-			}
-			
-		}
-		printDinero();
-		printFichas();
-	}
-	
 	private void initGUI() { // crear la GUI
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// define window container and layout
@@ -162,6 +129,7 @@ public class Domino extends JFrame {
 		
 		// crea los escuchas
 		escucha = new Escuchas();
+		escuchaBotones = new EscuchaBotones();
 		
 		//-------------- Panel superior --------------
 		tituloPanel = new JPanel();
@@ -171,7 +139,7 @@ public class Domino extends JFrame {
 		
 		// Botón Nuevo
 		nuevo = new JButton("Nuevo");
-		nuevo.addActionListener(escucha);
+		nuevo.addActionListener(escuchaBotones);
 		nuevo.setFont(new Font(Font.SANS_SERIF, Font.ITALIC+Font.BOLD, 12));
 		
 		c.gridx = 0;
@@ -198,7 +166,7 @@ public class Domino extends JFrame {
 		salir.setForeground(Color.white);
 		salir.setBackground(Color.red);
 		salir.setPreferredSize(new Dimension(42,25));
-		salir.addActionListener(escucha);
+		salir.addActionListener(escuchaBotones);
 		
 		c.gridx = 2;
 		c.weightx = 0.01;
@@ -303,7 +271,7 @@ public class Domino extends JFrame {
 		getFicha.setForeground(Color.white);
 		getFicha.setBackground(Color.cyan.darker().darker().darker());
 		getFicha.setPreferredSize(PILABUTP_SIZE);
-		getFicha.addActionListener(escucha);
+		getFicha.addActionListener(escuchaBotones);
 		
 		pilaButtonPanel.add(getFicha, BorderLayout.CENTER);
 		
@@ -315,6 +283,11 @@ public class Domino extends JFrame {
 		
 		revalidate();
 		repaint();
+	}
+	
+	public void nuevaPartida() {
+		control.nuevaPartida();
+		escogerInicio();
 	}
 	
 	private void escogerInicio() { // Escoge quién inicia la partida
@@ -359,6 +332,33 @@ public class Domino extends JFrame {
 		nuevaRonda(quien);
 	}
 	
+	public void nuevaRonda(boolean inicia) {
+		if (!control.puedeApostar()) {
+			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
+			return;
+		}
+		control.nuevaRonda();
+		c = new GridBagConstraints();
+		xIzq = 28;
+		yIzq = 12;
+		xDer = xIzq;
+		yDer = yIzq;
+		esquinaIzq = false;
+		IzqA1 = false;
+		esquinaDer = false;
+		DerA1 = false;
+		if (!inicia) { // inicia la máquina
+			Ficha ficha1 = control.getFichasOponente().get(0);
+			if (colocarFicha(ficha1)) {
+				control.getFichasOponente().remove(ficha1);
+				oponentPanel.remove(ficha1);
+				tableroPanel.add(ficha1, c);
+			}
+		}
+		printDinero();
+		printFichas();
+	}
+	
 	private void printDinero() { // Muestra el dinero y la apuesta actual
 		dineroText.setText(
 				"Dinero:\n"+ control.getDinero() + "\n" +
@@ -401,6 +401,7 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
+	
 	private void cogerFicha(boolean quien) {
 		control.cogerFicha(quien);
 		printFichas();
@@ -415,6 +416,8 @@ public class Domino extends JFrame {
             	tableroPanel.add(fichaOponente, c);
         		if(ganar())
         			escogerInicio();
+        		revalidate();
+        		repaint();
         		return;
         	}
         	else {
@@ -427,6 +430,30 @@ public class Domino extends JFrame {
         }
 	}
 	
+	private boolean ganar() {
+		int ganador = control.ganar();
+		switch (ganador) {
+		case -1:
+			//el juego sigue, nadie ha ganado
+			return false;
+		case 0:
+			//perdedor (ganó la máquina)
+			printDinero();
+			printFichas();
+			revalidate();
+			repaint();
+			JOptionPane.showMessageDialog(jugadorPanel, "Has perdido.");
+			return true;
+		case 1:
+			//ganador
+			printDinero();
+			printFichas();
+			repaint();
+			JOptionPane.showMessageDialog(jugadorPanel, "GANADOR");
+			return true;
+		}
+		return false;
+	}
 	
 	private boolean colocarFicha(Ficha ficha) { // Coloca la ficha en el tablero
 		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
@@ -685,33 +712,22 @@ public class Domino extends JFrame {
     	return false;
 	}
 	
-	
-	private boolean ganar() {
-		int ganador = control.ganar();
-		switch (ganador) {
-		case -1:
-			//el juego sigue, nadie ha ganado
-			return false;
-		case 0:
-			//perdedor (ganó la máquina)
-			printDinero();
-			printFichas();
-			revalidate();
-			repaint();
-			JOptionPane.showMessageDialog(jugadorPanel, "Has perdido.");
-			return true;
-		case 1:
-			//ganador
-			printDinero();
-			printFichas();
-			repaint();
-			JOptionPane.showMessageDialog(jugadorPanel, "GANADOR");
-			return true;
-		}
-		return false;
-		
-	}	
 
+	private class EscuchaBotones implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent eventAction) {
+			// responde a los botones
+			if (eventAction.getSource() == salir) {
+				System.exit(0);
+			} else if (eventAction.getSource() == nuevo) {
+				nuevaPartida();
+			} else if (eventAction.getSource() == getFicha) {
+				cogerFicha(true);
+			}
+		}
+	}
+	
 	private class EscuchaInicio extends MouseAdapter{
 		private  JPanel clickedPanel = null;
 		private  Ficha clickedFicha = null;
@@ -760,24 +776,12 @@ public class Domino extends JFrame {
         }
 	}
 	
-	private  class Escuchas extends MouseAdapter implements ActionListener{
+	private  class Escuchas extends MouseAdapter{
 		private  Ficha dragFicha = null;
 		private  int mX, mY, dragFichaHCenter, dragFichaVCenter;
 		private  JPanel clickedPanel = null;
 		
         @Override
-		public void actionPerformed(ActionEvent eventAction) {
-			// responde a los botones
-			if (eventAction.getSource() == salir) {
-				System.exit(0);
-			} else if (eventAction.getSource() == nuevo) {
-				nuevaPartida();
-			} else if (eventAction.getSource() == getFicha) {
-				cogerFicha(true);
-			}
-		}
-		
-		@Override
         public void mousePressed(MouseEvent me) {
 			clickedPanel = jugadorPanel;
 			ArrayList<Ficha> fichasJugador = control.getFichasJugador();
@@ -821,7 +825,7 @@ public class Domino extends JFrame {
 		
 		@Override
         public void mouseReleased(MouseEvent me) {
-			//System.out.println("MouseReleased");
+			//System.out.println("MouseReleased"); //debug purpose
 			boolean jugada = false;
 			ArrayList<Ficha> fichasJugador = control.getFichasJugador();
             if (dragFicha == null) { // Just in case

@@ -108,12 +108,14 @@ public class Control {
 			cartera.addDinero(10);
 			return 1;
 		} else if (pila.size() == 0) {
-			if (jugador.puedeJugar(fichasTablero) >= 0 || oponente.puedeJugar(fichasTablero) >= 0) {
+			if (jugador.puedeJugar(fichasTablero) >= 0) {
 				return -1; // el juego continúa
+			} else if (oponente.puedeJugar(fichasTablero) >= 0) {
+				return -2;
 			} else {
 				int valJugador  = jugador.valFichas();
 				int valOponente = oponente.valFichas();
-				if (valJugador > valOponente) {
+				if (valJugador < valOponente) {
 					cartera.addDinero(10);
 					return 1; //jugador gana
 				}

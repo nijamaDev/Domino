@@ -286,8 +286,6 @@ public class Domino extends JFrame {
 	}
 	
 	public void nuevaPartida() {
-		jugadorPanel.enable();
-		pilaPanel.enable();
 		control.nuevaPartida();
 		escogerInicio();
 	}
@@ -296,8 +294,6 @@ public class Domino extends JFrame {
 		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
 		if (!control.puedeApostar()) {
 			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
-			jugadorPanel.disable();
-			pilaPanel.disable();
 			return;
 		}
 		escuchaInicio = new EscuchaInicio();

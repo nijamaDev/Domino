@@ -96,7 +96,7 @@ public class Control {
 	
 	
 	public int ganar() {
-		if (!(oponente.getFichasJugador().size() == 0)) { //gana la máquina
+		if (oponente.getFichasJugador().size() == 0) { //gana la máquina
 			cartera.addDinero(-10);
 			return 0;
 		} else if (jugador.getFichasJugador().size() == 0) { // jugador ganó

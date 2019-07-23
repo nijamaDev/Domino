@@ -405,6 +405,8 @@ public class Domino extends JFrame {
 	private void cogerFicha(boolean quien) {
 		control.cogerFicha(quien);
 		printFichas();
+		if(ganar())
+    		escogerInicio();
 	}
 	
 	private void hacerJugada() {
@@ -414,10 +416,10 @@ public class Domino extends JFrame {
         		control.getFichasOponente().remove(fichaOponente);
             	oponentPanel.remove(fichaOponente);
             	tableroPanel.add(fichaOponente, c);
-        		if(ganar())
-        			escogerInicio();
-        		revalidate();
+            	revalidate();
         		repaint();
+            	if(ganar())
+        			escogerInicio();
         		return;
         	}
         	else {

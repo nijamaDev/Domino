@@ -2,7 +2,7 @@
   Archivo: Domino.java
   Fecha creación:		Jul 14, 2019
   Última modificación:	Jul 22, 2019
-  Versión: 0.5
+  Versión: 0.9
   Licencia: GPL
 
   Autores:	Nicolas Jaramillo Mayor         1840558
@@ -411,6 +411,12 @@ public class Domino extends JFrame {
 	
 	private void hacerJugada() {
 		Ficha fichaOponente = control.hacerJugada();
+		for (int i=0; i<control.getFichasOponente().size(); i++) {
+			oponentPanel.add(control.getFichasOponente().get(i));
+			pilaPanel.remove(control.getFichasOponente().get(i));
+		}
+		pilaPanel.revalidate();
+		pilaPanel.repaint();
         if (fichaOponente != null) {
         	if (colocarFicha(fichaOponente)) {
         		control.getFichasOponente().remove(fichaOponente);
@@ -435,6 +441,7 @@ public class Domino extends JFrame {
 	private boolean ganar() {
 		int ganador = control.ganar();
 		switch (ganador) {
+		case -2:
 		case -1:
 			//el juego sigue, nadie ha ganado
 			return false;

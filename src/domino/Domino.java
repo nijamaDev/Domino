@@ -286,12 +286,20 @@ public class Domino extends JFrame {
 	}
 	
 	public void nuevaPartida() {
+		jugadorPanel.enable();
+		pilaPanel.enable();
 		control.nuevaPartida();
 		escogerInicio();
 	}
 	
 	private void escogerInicio() { // Escoge quién inicia la partida
 		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
+		if (!control.puedeApostar()) {
+			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
+			jugadorPanel.disable();
+			pilaPanel.disable();
+			return;
+		}
 		escuchaInicio = new EscuchaInicio();
 		ArrayList<Ficha> fichas = control.getFichas();
 		inicioPanel = (JPanel) this.getGlassPane();
@@ -333,10 +341,6 @@ public class Domino extends JFrame {
 	}
 	
 	public void nuevaRonda(boolean inicia) {
-		if (!control.puedeApostar()) {
-			JOptionPane.showMessageDialog(this, "¿No tienes dinero? ¡Fuera de aquí!");
-			return;
-		}
 		control.nuevaRonda();
 		c = new GridBagConstraints();
 		xIzq = 28;

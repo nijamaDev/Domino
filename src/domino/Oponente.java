@@ -16,13 +16,17 @@ package domino;
 
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class Oponente.
  */
 public class Oponente extends Jugador{
 
 	/**
-	 * @param tablero
+	 * Hacer jugada.
+	 *
+	 * @param tablero the tablero
+	 * @return the ficha
 	 */
 	public Ficha hacerJugada(ArrayList<Ficha> tablero) {
 		int nficha;

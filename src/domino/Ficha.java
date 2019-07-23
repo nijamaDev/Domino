@@ -20,18 +20,39 @@ import javax.swing.JLabel;
 import codigoExterno.RotatedIcon;
 import codigoExterno.RotatedIcon.Rotate;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class Ficha.
  */
 public class Ficha extends JLabel {
+	
+	/** The Constant ROTAR_ABAJO. */
 	public static final int ROTAR_0 = 0, ROTAR_IZQ = -1, ROTAR_DER = 1, ROTAR_ABAJO = 3;
+	
+	/** The back. */
 	public static ImageIcon back;
+	
+	/** The front. */
 	private ImageIcon front;
+	
+	/** The rotate icon. */
 	private RotatedIcon rotateIcon;
+	
+	/** The v der O. */
 	private int vIzq, vDer, vIzqO, vDerO;
 	
+	/**
+	 * Instantiates a new ficha.
+	 */
 	public Ficha() {}
 	
+	/**
+	 * Instantiates a new ficha.
+	 *
+	 * @param image the image
+	 * @param vIzq the v izq
+	 * @param vDer the v der
+	 */
 	public Ficha(ImageIcon image, int vIzq, int vDer) {
 		setIcon(back);
 		this.front = image;
@@ -41,6 +62,11 @@ public class Ficha extends JLabel {
 		this.vDer = vDer;
 	}
 	
+	/**
+	 * Instantiates a new ficha.
+	 *
+	 * @param newFicha the new ficha
+	 */
 	public Ficha(Ficha newFicha) {
 		front = newFicha.front;
 		vIzqO = newFicha.getvIzq();
@@ -57,6 +83,11 @@ public class Ficha extends JLabel {
 	}
 	*/
 	
+	/**
+	 * Girar ficha.
+	 *
+	 * @param rotar the rotar
+	 */
 	public void girarFicha(int rotar) {
 		switch (rotar) {
 		case 0: //vertical, original
@@ -86,21 +117,32 @@ public class Ficha extends JLabel {
 		
 	}
 	
+	/**
+	 * Cambiar val.
+	 */
 	public void cambiarVal() {
 		int aux = vIzq;
 		vIzq = vDer;
 		vDer = aux;
 	}
 	
+	/**
+	 * Tapar ficha.
+	 */
 	public void taparFicha() {
 		setIcon(back);
 	}
 	
+	/**
+	 * Destapar ficha.
+	 */
 	public void destaparFicha() {
 		setIcon(front);
 	}
 
 	/**
+	 * Gets the v izq.
+	 *
 	 * @return the vIzq
 	 */
 	public int getvIzq() {
@@ -108,6 +150,8 @@ public class Ficha extends JLabel {
 	}
 
 	/**
+	 * Gets the v der.
+	 *
 	 * @return the vDer
 	 */
 	public int getvDer() {
@@ -115,6 +159,8 @@ public class Ficha extends JLabel {
 	}
 	
 	/**
+	 * Gets the front.
+	 *
 	 * @return the front
 	 */
 	public ImageIcon getFront() {

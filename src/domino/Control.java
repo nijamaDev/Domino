@@ -24,18 +24,36 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class Control.
  */
 public class Control {
+	
+	/** The ficha icon. */
 	private ImageIcon fichaIcon = null;
+	
+	/** The image route. */
 	private String imageRoute = "src/imagenes/";
+	
+	/** The fichas tablero. */
 	private ArrayList<Ficha> fichas, pila, fichasTablero;
+	
+	/** The jugador. */
 	private Jugador jugador;
+	
+	/** The oponente. */
 	private Oponente oponente;
+	
+	/** The cartera. */
 	private Cartera cartera;
+	
+	/** The apuesta. */
 	private int apuesta;
 	
+	/**
+	 * Instantiates a new control.
+	 */
 	public Control() {
 		apuesta = 10;
 		fichas = new ArrayList<Ficha>(28); // Contiene todas las fichas
@@ -58,12 +76,18 @@ public class Control {
 		}
 	}
 	
+	/**
+	 * Nueva partida.
+	 */
 	public void nuevaPartida() {
 		cartera = new Cartera(30);
 		jugador = new Jugador();
 		oponente = new Oponente();
 	}
 	
+	/**
+	 * Nueva ronda.
+	 */
 	public void nuevaRonda() {
 		jugador.getFichasJugador().clear();
 		oponente.getFichasJugador().clear();
@@ -88,6 +112,11 @@ public class Control {
 		//oponente.juega(inicia);
 	}
 	
+	/**
+	 * Hacer jugada.
+	 *
+	 * @return the ficha
+	 */
 	public Ficha hacerJugada(){
 		Ficha ficha = null;
 		ficha = oponente.hacerJugada(fichasTablero);
@@ -95,6 +124,11 @@ public class Control {
 	}
 	
 	
+	/**
+	 * Ganar.
+	 *
+	 * @return the int
+	 */
 	public int ganar() {
 		if (oponente.getFichasJugador().size() == 0) { //gana la máquina
 			cartera.addDinero(-10);
@@ -123,6 +157,12 @@ public class Control {
 		
 	}
 	
+	/**
+	 * Coger ficha.
+	 *
+	 * @param quien the quien
+	 * @return true, if successful
+	 */
 	public boolean cogerFicha(boolean quien) {
 		if (pila.size() < 1)
 			return false;
@@ -138,6 +178,11 @@ public class Control {
 		return true;
 	}
 	
+	/**
+	 * Puede apostar.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean puedeApostar() {
 		if(cartera.puedeApostar(apuesta)) {
 			return true;
@@ -145,30 +190,65 @@ public class Control {
 		return false;
 	}
 	
+	/**
+	 * Gets the dinero.
+	 *
+	 * @return the dinero
+	 */
 	public int getDinero() {
 		return cartera.getDinero();
 	}
 	
+	/**
+	 * Gets the apuesta.
+	 *
+	 * @return the apuesta
+	 */
 	public int getApuesta() {
 		return apuesta;
 	}
 	
+	/**
+	 * Gets the fichas jugador.
+	 *
+	 * @return the fichas jugador
+	 */
 	public ArrayList<Ficha> getFichasJugador() {
 		return jugador.getFichasJugador();
 	}
 	
+	/**
+	 * Gets the fichas oponente.
+	 *
+	 * @return the fichas oponente
+	 */
 	public ArrayList<Ficha> getFichasOponente() {
 		return oponente.getFichasJugador();
 	}
 	
+	/**
+	 * Gets the pila.
+	 *
+	 * @return the pila
+	 */
 	public ArrayList<Ficha> getPila() {
 		return pila;
 	}
 	
+	/**
+	 * Gets the fichas tablero.
+	 *
+	 * @return the fichas tablero
+	 */
 	public ArrayList<Ficha> getFichasTablero() {
 		return fichasTablero;
 	}
 	
+	/**
+	 * Gets the fichas.
+	 *
+	 * @return the fichas
+	 */
 	public ArrayList<Ficha> getFichas() {
 		return fichas;
 	}

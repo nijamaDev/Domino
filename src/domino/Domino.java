@@ -45,11 +45,13 @@ import javax.swing.JTextArea;
 
 import codigoExterno.Titulos;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class Domino.
  */
 public class Domino extends JFrame {
 
+	/** The Constant FICHA_VSIZE. */
 	private static final int 
 		WINDOW_HSIZE   = 1270, WINDOW_VSIZE   = 720,
 							   TITULOP_VSIZE  =  30,
@@ -62,6 +64,8 @@ public class Domino extends JFrame {
 		JUGADORP_VSIZE = WINDOW_VSIZE-TABLEROP_VSIZE,
 		
 		FICHA_HSIZE = 40, FICHA_VSIZE = 80;
+	
+	/** The Constant FICHA_H. */
 	private static final Dimension 
 		WINDOW_SIZE    = new Dimension(WINDOW_HSIZE,    WINDOW_VSIZE),
 		TITULOP_SIZE   = new Dimension(WINDOW_HSIZE,    TITULOP_VSIZE),
@@ -75,11 +79,23 @@ public class Domino extends JFrame {
 		INICIOFICHAP   = new Dimension(WINDOW_HSIZE,    WINDOW_VSIZE - TITULOP_VSIZE),
 		FICHA_V        = new Dimension(FICHA_HSIZE,     FICHA_VSIZE),
 		FICHA_H        = new Dimension(FICHA_VSIZE,     FICHA_HSIZE);
+	
+	/** The escucha. */
 	private Escuchas escucha;
+	
+	/** The escucha botones. */
 	private EscuchaBotones escuchaBotones;
+	
+	/** The escucha inicio. */
 	private EscuchaInicio escuchaInicio;
+	
+	/** The get ficha. */
 	private JButton nuevo, salir, getFicha;
+	
+	/** The layered pane. */
 	private JLayeredPane layeredPane; // necesario para arrastrar las fichas (se colola en this.getContentPane()
+	
+	/** The jugador panel. */
 	private JPanel allPanel,    // Panel para agregar los demás paneles
 				   tituloPanel, // North -- contiene el botón nuevo y salir y el título "Dominó"  
 				   zonaJuego,	// Center -- contiene los paneles opponentPanel, tablero y jugadorPanel.
@@ -88,17 +104,33 @@ public class Domino extends JFrame {
 				   pilaBackPanel,
 				   pilaButtonPanel,
 				   jugadorPanel;// center > South Contiene las Fichas del Jugador y un JTextArea
+	
+	/** The inicio panel. */
 	private JPanel inicioPanel; // Aquí se muestran las fichas para escoger quien inicia
 				  
 	
+	/** The tablero panel. */
 	private ImageJPanel tableroPanel;// Center > Center // Contiene las fichas que se colocan durante la partida
+	
+	/** The control. */
 	private Control control;  // Lleva el mecanismo del juego
+	
+	/** The dinero text. */
 	private JTextArea dineroText;  // Contiene el Dinero y la apuesta (visualmente)
+	
+	/** The c. */
 	private GridBagConstraints c = new GridBagConstraints();
+	
+	/** The y der. */
 	private int xIzq, yIzq, //Coordenadas del lado izquierdo del tablero (para colocar fichas)
 				xDer, yDer; //Coordenadas del lado derecho del tablero
+	
+	/** The Der A 1. */
 	private boolean esquinaIzq, IzqA1, esquinaDer, DerA1;
 	
+	/**
+	 * Instantiates a new domino.
+	 */
 	public Domino() {
 		control = new Control();
 		initGUI();
@@ -112,6 +144,9 @@ public class Domino extends JFrame {
 		nuevaPartida();
 	}
 	
+	/**
+	 * Inits the GUI.
+	 */
 	private void initGUI() { // crear la GUI
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// define window container and layout
@@ -285,11 +320,17 @@ public class Domino extends JFrame {
 		repaint();
 	}
 	
+	/**
+	 * Nueva partida.
+	 */
 	public void nuevaPartida() {
 		control.nuevaPartida();
 		escogerInicio();
 	}
 	
+	/**
+	 * Escoger inicio.
+	 */
 	private void escogerInicio() { // Escoge quién inicia la partida
 		// si el jugador saca más alto él inicia y retorna true, si la máquina empieza retorna false
 		if (!control.puedeApostar()) {
@@ -326,6 +367,11 @@ public class Domino extends JFrame {
 		return; //place holder
 	}
 	
+	/**
+	 * Iniciar.
+	 *
+	 * @param quien the quien
+	 */
 	private void iniciar(boolean quien) {
 		ArrayList<Ficha> fichasJugador = control.getFichasJugador();
 		for (int i=0; i<fichasJugador.size(); i++) {
@@ -336,6 +382,11 @@ public class Domino extends JFrame {
 		nuevaRonda(quien);
 	}
 	
+	/**
+	 * Nueva ronda.
+	 *
+	 * @param inicia the inicia
+	 */
 	public void nuevaRonda(boolean inicia) {
 		control.nuevaRonda();
 		c = new GridBagConstraints();
@@ -359,6 +410,9 @@ public class Domino extends JFrame {
 		printFichas();
 	}
 	
+	/**
+	 * Prints the dinero.
+	 */
 	private void printDinero() { // Muestra el dinero y la apuesta actual
 		dineroText.setText(
 				"Dinero:\n"+ control.getDinero() + "\n" +
@@ -366,6 +420,9 @@ public class Domino extends JFrame {
 	}
 	
 	
+	/**
+	 * Prints the fichas.
+	 */
 	private void printFichas() { // Muestra las fichas del jugador y las de la máquina
 		ArrayList<Ficha> list;
 		Ficha ficha;
@@ -402,6 +459,12 @@ public class Domino extends JFrame {
 	}
 	
 	
+	/**
+	 * Coger ficha.
+	 *
+	 * @param quien the quien
+	 * @return the ficha
+	 */
 	private Ficha cogerFicha(boolean quien) {
 		if (!quien) {
 			Ficha ficha = null;
@@ -426,6 +489,9 @@ public class Domino extends JFrame {
 		return null;
 	}
 	
+	/**
+	 * Hacer jugada.
+	 */
 	private void hacerJugada() {
 		Ficha fichaOponente = cogerFicha(false);
 		for (int i=0; i<control.getFichasOponente().size(); i++) {
@@ -455,6 +521,11 @@ public class Domino extends JFrame {
         }
 	}
 	
+	/**
+	 * Ganar.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean ganar() {
 		int ganador = control.ganar();
 		switch (ganador) {
@@ -481,6 +552,12 @@ public class Domino extends JFrame {
 		return false;
 	}
 	
+	/**
+	 * Colocar ficha.
+	 *
+	 * @param ficha the ficha
+	 * @return true, if successful
+	 */
 	private boolean colocarFicha(Ficha ficha) { // Coloca la ficha en el tablero
 		ArrayList<Ficha> fichasTablero = control.getFichasTablero();
 		int tableroSize = fichasTablero.size(),
@@ -739,8 +816,16 @@ public class Domino extends JFrame {
 	}
 	
 
+	/**
+	 * The Class EscuchaBotones.
+	 */
 	private class EscuchaBotones implements ActionListener{
 
+		/**
+		 * Action performed.
+		 *
+		 * @param eventAction the event action
+		 */
 		@Override
 		public void actionPerformed(ActionEvent eventAction) {
 			// responde a los botones
@@ -754,10 +839,22 @@ public class Domino extends JFrame {
 		}
 	}
 	
+	/**
+	 * The Class EscuchaInicio.
+	 */
 	private class EscuchaInicio extends MouseAdapter{
+		
+		/** The clicked panel. */
 		private  JPanel clickedPanel = null;
+		
+		/** The clicked ficha. */
 		private  Ficha clickedFicha = null;
 		
+		/**
+		 * Mouse pressed.
+		 *
+		 * @param me the me
+		 */
 		@Override
         public void mousePressed(MouseEvent me) {
 			clickedPanel = (JPanel) inicioPanel.getComponentAt(me.getPoint());
@@ -802,11 +899,25 @@ public class Domino extends JFrame {
         }
 	}
 	
+	/**
+	 * The Class Escuchas.
+	 */
 	private  class Escuchas extends MouseAdapter{
+		
+		/** The drag ficha. */
 		private  Ficha dragFicha = null;
+		
+		/** The drag ficha V center. */
 		private  int mX, mY, dragFichaHCenter, dragFichaVCenter;
+		
+		/** The clicked panel. */
 		private  JPanel clickedPanel = null;
 		
+        /**
+         * Mouse pressed.
+         *
+         * @param me the me
+         */
         @Override
         public void mousePressed(MouseEvent me) {
 			clickedPanel = jugadorPanel;
@@ -838,6 +949,11 @@ public class Domino extends JFrame {
             repaint();
         }
 		
+		/**
+		 * Mouse dragged.
+		 *
+		 * @param me the me
+		 */
 		@Override
         public void mouseDragged(MouseEvent me) {
             if (dragFicha == null) {
@@ -849,6 +965,11 @@ public class Domino extends JFrame {
             repaint();
         }
 		
+		/**
+		 * Mouse released.
+		 *
+		 * @param me the me
+		 */
 		@Override
         public void mouseReleased(MouseEvent me) {
 			//System.out.println("MouseReleased"); //debug purpose
